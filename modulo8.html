@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo 12: Reclamaciones - SumoBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --sena-green: #39A900; 
+            --sena-blue: #00324D; 
+            --sena-orange: #FF6C00; 
+            --bg-body: #F4F6F9; 
+            --bg-card: #FFFFFF; 
+            --text-gray: #59667a; 
+            --shadow: 0 4px 20px rgba(0,0,0,0.05); 
+            --radius: 12px; 
+            --sidebar-width: 320px; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; position: sticky; top: 0; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+
+.module-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--sena-blue);
+    text-transform: uppercase; /* Convierte a mayúsculas */
+    letter-spacing: 1.7px;      /* Espacio entre letras de 1.7 */
+    flex: 1;                    /* Ayuda a centrar o distribuir el espacio */
+    text-align: center;         /* Centra el texto entre los logos */
+}
+
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; align-items: stretch; }
+
+        .sidebar { 
+            width: var(--sidebar-width); 
+            background: var(--bg-card); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            padding: 1.5rem; 
+            display: flex; 
+            flex-direction: column; 
+            height: calc(100vh - 100px); /* Ajuste para scroll interno */
+            position: sticky;
+            top: 100px;
+        }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.1rem; }
+        
+        .search-container { margin-bottom: 1rem; }
+        .search-box { width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; outline: none; }
+        .search-box:focus { border-color: var(--sena-green); }
+
+        .menu-list { flex: 1; overflow-y: auto; padding-right: 5px; }
+        /* Scrollbar estilizado */
+        .menu-list::-webkit-scrollbar { width: 6px; }
+        .menu-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 6px; 
+            border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); 
+            font-weight: 500; border: 1px solid transparent; font-size: 0.9rem;
+        }
+        .menu-item i { width: 25px; text-align: center; color: var(--sena-blue); }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); }
+        .menu-item:hover i { color: var(--sena-green); }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); border-color: var(--sena-green); }
+        .menu-item.active i { color: white; }
+
+        .content-area { flex: 1; background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; display: flex; flex-direction: column; min-height: 600px; }
+        
+        #definition-display { animation: fadeIn 0.4s ease-out; width: 100%; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .term-title { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 2.2rem; margin-bottom: 1rem; border-bottom: 3px solid var(--sena-orange); display: inline-block; padding-bottom: 5px; }
+        
+        .def-layout { display: grid; grid-template-columns: 1fr 300px; gap: 30px; align-items: start; }
+        .def-text-side p { font-size: 1.1rem; color: #444; margin-bottom: 15px; line-height: 1.7; text-align: justify;}
+
+        /* ESTILOS DE TARJETAS */
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .info-card { padding: 15px; border-radius: 8px; font-size: 0.9rem; border-left: 5px solid; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .info-card h4 { margin-bottom: 5px; display: flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; }
+        
+        .card-tip { background: #fff8e1; border-color: #ffc107; color: #856404; }
+        .card-challenge { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .card-tech { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
+        .card-real { background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
+
+        .def-image-side img { width: 100%; height: 250px; object-fit: cover; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 5px solid white; margin-bottom: 15px; }
+        .image-caption { font-size: 0.8rem; color: #777; font-style: italic; text-align: center; }
+
+        .sidebar-footer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; }
+        .progress-bar-bg { background: #eee; height: 8px; border-radius: 10px; margin: 15px 0; }
+        .progress-bar-fill { background: var(--sena-orange); height: 100%; width: 0%; border-radius: 10px; transition: 0.5s; }
+        
+        .finish-btn { width: 100%; padding: 12px; background: #ccc; color: white; border: none; border-radius: 8px; cursor: not-allowed; font-weight: bold; transition: 0.3s; }
+        .finish-btn.ready { background: var(--sena-green); cursor: pointer; box-shadow: 0 4px 15px rgba(57, 169, 0, 0.4); }
+        .finish-btn.ready:hover { transform: translateY(-2px); }
+
+        /* Estado inicial vacío */
+        .empty-state { text-align: center; color: #999; margin-top: 50px; }
+        .empty-state i { font-size: 4rem; margin-bottom: 20px; color: #ddd; }
+
+        @media (max-width: 992px) { 
+            .main-layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; }
+            .def-layout { grid-template-columns: 1fr; } 
+            .cards-grid { grid-template-columns: 1fr; } 
+        }
+
+/* Animación de pulso para el trofeo */
+@keyframes trophyBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+#congrats-content i {
+    animation: trophyBounce 2s infinite ease-in-out;
+}
+    </style>
+</head>
+<body>
+
+    <header>
+    <div class="header-left">
+        <img src="imagenes/Logos/sena.png" alt="SENA Logo" style="height: 50px;">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+    </div>
+
+    <div class="module-title">CAP. 12: RECLAMACIONES</div>
+
+    <img src="imagenes/Logos/tecnoacademia.jpeg" alt="TecnoAcademia Logo" style="height: 50px;">
+</header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+           <h3><i class="fas fa-gavel"></i> Artículos del Reglamento</h3>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Buscar artículo..." onkeyup="filterMenu(this.value)">
+            </div>
+            <div class="menu-list" id="menu-list">
+                </div>
+            <div class="sidebar-footer">
+                <small>Artículos Leídos: <span id="count">0</span>/5</small>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
+                <button id="btn-finish" class="finish-btn" onclick="finishModule()"><i class="fas fa-check-circle"></i> Aprobar Capítulo</button>
+            </div>
+        </aside>
+
+<main class="content-area">
+            <div id="definition-display">
+                <div class="empty-state">
+                    <i class="fas fa-balance-scale" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                    <h2>Selecciona un Artículo</h2>
+                    <p>Haz clic en el menú de la izquierda para explorar los protocolos, tiempos y validez de las reclamaciones oficiales.</p>
+                </div>
+            </div>
+        </main>
+<div id="congrats-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,32,77,0.9); z-index: 1000; justify-content: center; align-items: center; flex-direction: column; opacity: 0; transition: opacity 0.5s ease;">
+    <div style="background: white; padding: 3rem; border-radius: 20px; text-align: center; max-width: 550px; transform: scale(0.7); transition: transform 0.5s ease; border-top: 10px solid var(--sena-orange);" id="congrats-content">
+        <i class="fas fa-balance-scale" style="font-size: 5rem; color: var(--sena-orange); margin-bottom: 1rem;"></i>
+        <h1 style="font-family: 'Montserrat'; color: var(--sena-blue); margin-bottom: 1rem; text-transform: uppercase;">¡Veredicto Final!</h1>
+        <p style="font-size: 1.1rem; color: var(--text-gray); margin-bottom: 2rem;">Has completado el Capítulo de Reclamaciones. Entender los protocolos correctos asegura que defiendas los derechos de tu equipo con profesionalismo y respeto.</p>
+        <button onclick="window.location.href='index.html'" style="padding: 15px 35px; background: var(--sena-blue); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(0,50,77,0.3); transition: transform 0.2s;">
+            <i class="fas fa-home"></i> Continuar al Comando Central
+        </button>
+    </div>
+</div>
+
+    <script>
+        // DATOS DEL GLOSARIO ACTUALIZADOS (Nuevos Términos)
+        const glossaryData = [
+            { 
+                term: "12.1 Legitimidad y Medios", 
+                icon: "fa-user-tie",
+                def: "El derecho a presentar una reclamación formal está estrictamente regulado para mantener el orden de la competencia. <strong>Únicamente el Capitán del equipo está autorizado</strong> para hacerlo. Ningún otro miembro, instructor, tutor o espectador tiene voz para intervenir en las decisiones arbitrales.", 
+                img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+                caption: "La vocería es exclusiva del Capitán del equipo.",
+                tip: "La reclamación debe ser verbal, respetuosa y formal, levantando la mano.",
+                challenge: "Dirígete exclusivamente al Juez de Pista, no a otros competidores.",
+                tech: "Es un derecho procedimental, no un espacio de discusión acalorada.",
+                real: "Las quejas a gritos o faltas de respeto anulan el derecho a reclamo y derivan en sanciones."
+            },
+            { 
+                term: "12.2 Tiempos y Oportunidad", 
+                icon: "fa-stopwatch",
+                def: "El momento de la reclamación es crítico. Debe manifestarse <strong>inmediatamente al finalizar la ronda en disputa</strong> y estrictamente antes de retirar los robots del Dohyo o prepararlos para la siguiente ronda.", 
+                img: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=600&q=80",
+                caption: "El tiempo para argumentar la reclamación es limitado.",
+                tip: "El Capitán tiene máximo un (1) minuto para exponer el artículo vulnerado.",
+                challenge: "No toques tu robot si planeas presentar una reclamación.",
+                tech: "Principio de Preclusión: Al retirar el robot o presionar inicio, se acepta el resultado tácitamente.",
+                real: "A partir de ese milisegundo, el resultado de la ronda es absolutamente inapelable."
+            },
+            { 
+                term: "12.3 Asuntos Reclamables", 
+                icon: "fa-check-circle",
+                def: "No todo evento es objeto de reclamo. Solo se aceptarán reclamaciones que se fundamenten en <strong>incumplimientos comprobables del reglamento</strong>, sustentados en hechos técnicos, objetivos y observables.", 
+                img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80",
+                caption: "Toda reclamación debe basarse en evidencias técnicas.",
+                tip: "Sospecha técnica sobre el oponente (dimensiones, armas, imanes).",
+                challenge: "Movimiento del oponente antes de cumplirse los 5 segundos.",
+                tech: "Errores procedimentales comprobables del juez en la planilla oficial.",
+                real: "Si tu reclamo no menciona un artículo específico del manual, será descartado."
+            },
+            { 
+                term: "12.4 Asuntos NO Reclamables", 
+                icon: "fa-ban",
+                def: "Con el fin de garantizar la fluidez y respeto en la competencia, <strong>NO se admitirán reclamaciones sobre la percepción visual o cronométrica</strong> del juez de pista. La autoridad arbitral en sus apreciaciones sensoriales es definitiva.", 
+                img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80",
+                caption: "La visión y juicio del árbitro en pista no son debatibles.",
+                tip: "Prohibido reclamar apreciaciones milimétricas en salidas simultáneas.",
+                challenge: "No se debate la velocidad mental del conteo de inmovilidad (5s o 10s).",
+                tech: "Las decisiones de detención por seguridad son innegociables.",
+                real: "Insistir en reclamar estos puntos se considera conducta antideportiva (Advertencia)."
+            },
+            { 
+                term: "12.5 Revisión y Veredicto", 
+                icon: "fa-balance-scale",
+                def: "El procedimiento del juez ante un reclamo formalizado está diseñado para ser rápido y resolutivo. Una vez presentado el reclamo en el tiempo y forma correctos, <strong>el Juez de Pista detendrá momentáneamente el cronómetro general.</strong>", 
+                img: "https://images.unsplash.com/photo-1593115057322-e94b77572f20?auto=format&fit=crop&w=600&q=80",
+                caption: "El veredicto final es de obligatorio cumplimiento.",
+                tip: "El Juez puede resolver el reclamo inmediatamente a su discreción.",
+                challenge: "El juez puede consultar al Comité Organizador para evaluar dudas técnicas complejas.",
+                tech: "El veredicto emitido tras la revisión es definitivo.",
+                real: "Una vez dictado el veredicto, los equipos deben acatarlo sin más dilaciones y continuar."
+            }
+        ];
+
+        // LOGICA DEL SISTEMA (IDÉNTICA AL MODULO ANTERIOR)
+        const viewed = new Set();
+        const menuContainer = document.getElementById('menu-list');
+        const displayArea = document.getElementById('definition-display');
+        const countSpan = document.getElementById('count');
+        const progressFill = document.getElementById('progress-fill');
+        const finishBtn = document.getElementById('btn-finish');
+
+        function renderMenu(filter = "") {
+            menuContainer.innerHTML = "";
+            glossaryData.forEach((item, index) => {
+                if (item.term.toLowerCase().includes(filter.toLowerCase())) {
+                    const div = document.createElement('div');
+                    div.className = `menu-item ${viewed.has(index) ? 'viewed' : ''}`;
+                    div.innerHTML = `<i class="fas ${item.icon}"></i> ${item.term}`;
+                    if (viewed.has(index)) div.style.color = "var(--sena-green)";
+                    
+                    div.onclick = () => showDefinition(index, div);
+                    menuContainer.appendChild(div);
+                }
+            });
+        }
+
+        function showDefinition(index, element) {
+            const data = glossaryData[index];
+            
+            // Marcar como visto
+            viewed.add(index);
+            updateProgress();
+            
+            // Actualizar estilo del menú
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(i => i.classList.remove('active'));
+            element.classList.add('active');
+            element.style.color = "white"; // Force white text on active
+
+            // Renderizar contenido
+            displayArea.innerHTML = `
+                <h2 class="term-title">${data.term}</h2>
+                <div class="def-layout">
+                    <div class="def-text-side">
+                        <p>${data.def}</p>
+                        
+                        <div class="cards-grid">
+                            <div class="info-card card-tip" style="background: #fff8e1; border-color: #f59e0b;">
+                                <h4><i class="fas fa-exclamation-circle" style="color: #d97706;"></i> Regla de Oro</h4>
+                                ${data.tip}
+                            </div>
+                            <div class="info-card card-challenge" style="background: #eff6ff; border-color: #3b82f6;">
+                                <h4><i class="fas fa-bullseye" style="color: #2563eb;"></i> Especificación</h4>
+                                ${data.challenge}
+                            </div>
+                            <div class="info-card card-tech" style="background: #f0fdf4; border-color: #10b981;">
+                                <h4><i class="fas fa-book" style="color: #059669;"></i> Disposición Legal</h4>
+                                ${data.tech}
+                            </div>
+                            <div class="info-card card-real" style="background: #fef2f2; border-color: #ef4444;">
+                                <h4><i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i> Consecuencia</h4>
+                                ${data.real}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="def-image-side">
+                        <img src="${data.img}" alt="${data.term}">
+                        <p class="image-caption">${data.caption}</p>
+                    </div>
+                </div>
+            `;
+
+            // Reiniciar animación
+            displayArea.style.animation = 'none';
+            displayArea.offsetHeight; /* trigger reflow */
+            displayArea.style.animation = 'fadeIn 0.4s ease-out';
+        }
+
+        function updateProgress() {
+            const total = glossaryData.length;
+            const current = viewed.size;
+            
+            countSpan.innerText = current;
+            const percentage = (current / total) * 100;
+            progressFill.style.width = percentage + "%";
+
+            if (current === total) {
+                finishBtn.classList.add('ready');
+                finishBtn.removeAttribute('disabled');
+            }
+        }
+
+        function filterMenu(value) {
+            renderMenu(value);
+        }
+
+        function finishModule() {
+    // Verificamos si ya vio todos los términos
+    if (viewed.size === glossaryData.length) {
+        const storageKey = 'makerCourseState'; 
+        const savedState = sessionStorage.getItem(storageKey);
+        
+        // Lógica de guardado en sessionStorage
+        if (savedState) {
+            const state = JSON.parse(savedState);
+            if (!state.completedModules.includes(8)) {
+                state.completedModules.push(8);
+            }
+            sessionStorage.setItem(storageKey, JSON.stringify(state));
+        }
+        
+        // --- AQUÍ ESTÁ EL CAMBIO PARA LA ANIMACIÓN ---
+        const modal = document.getElementById('congrats-modal');
+        const content = document.getElementById('congrats-content');
+        
+        // Mostramos el contenedor (está oculto por defecto con display: none)
+        modal.style.display = 'flex';
+        
+        // Usamos un pequeño delay para que el navegador registre el cambio de display
+        // y pueda ejecutar la transición de opacidad y escala
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            content.style.transform = 'scale(1)';
+        }, 50);
+        
+        // Eliminamos el window.location de aquí para que no se cierre solo
+    } else {
+        // Opcional: un aviso por si intentan dar clic antes de terminar
+        alert("Aún no has leído todos los términos del glosario.");
+    }
+}
+
+        // Inicializar
+        renderMenu();
+    </script>
+
+</body>
+</html>

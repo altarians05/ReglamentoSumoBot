@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capítulo 7: Estructura y Desarrollo del Combate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ESTILOS GLOBALES ESTANDARIZADOS */
+        :root { 
+            --sena-green: #39A900; 
+            --sena-blue: #00324D; 
+            --sena-orange: #FF6C00; 
+            --bg-body: #F4F6F9; 
+            --bg-card: #FFFFFF; 
+            --text-gray: #59667a; 
+            --shadow: 0 4px 20px rgba(0,0,0,0.05); 
+            --radius: 12px; 
+            --menu-width: 290px; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* HEADER MEJORADO */
+        header { 
+            background-color: var(--bg-card); 
+            padding: 0.8rem 2rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            z-index: 100; 
+            position: sticky; 
+            top: 0; 
+        }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; font-size: 0.9rem; }
+        .back-btn:hover { color: var(--sena-orange); }
+        
+        .header-title {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sena-blue);
+            font-size: 1.0rem;
+            letter-spacing: 1.7px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        @media(max-width: 768px) { .header-title { display: none; } }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        
+        /* SIDEBAR CON PINES */
+        .sidebar { width: var(--menu-width); background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 6rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.1rem; }
+        
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; 
+            border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); 
+            font-weight: 500; position: relative; font-size: 0.9rem; border: 1px solid transparent;
+        }
+        .menu-item img { width: 28px; height: auto; transition: 0.3s; }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); border-color: #d1fae5; }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+        .menu-item.completed::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: 10px; color: var(--sena-green); }
+        .menu-item.active.completed::after { color: white; }
+
+        /* PROGRESO SIDEBAR */
+        .progress-sidebar { margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; }
+        .progress-label { font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; color: var(--sena-blue); }
+        .progress-bg { background: #e0e0e0; height: 10px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, var(--sena-green), var(--sena-orange)); height: 100%; width: 0%; transition: width 0.6s ease; }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 3rem; min-height: 600px; }
+        .activity-section { display: none; animation: fadeIn 0.5s ease; }
+        .activity-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .section-header i { color: var(--sena-orange); }
+
+        /* COMPONENTES ESPECÍFICOS */
+        .narrative-box { display: flex; gap: 20px; background: #e3f2fd; padding: 25px; border-radius: 20px; border-left: 6px solid var(--sena-blue); align-items: center; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .narrative-avatar { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-shrink: 0; }
+        .narrative-text { font-size: 1rem; color: #333; }
+
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem; box-shadow: 0 4px 0 #d35400; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #d35400; background: #ff7b1a; }
+        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #d35400; }
+
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; margin: 2rem 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* TABS BIOSEGURIDAD */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+        .tab-btn { padding: 10px 20px; border: 2px solid #eee; background: white; border-radius: 30px; cursor: pointer; font-weight: bold; color: var(--text-gray); transition: 0.3s; }
+        .tab-btn.active { background: var(--sena-blue); color: white; border-color: var(--sena-blue); }
+        .tab-content { display: none; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .tab-content.active { display: grid; }
+
+        .safety-card { background: white; border: 1px solid #eee; border-radius: 15px; padding: 20px; text-align: center; transition: 0.3s; position: relative; overflow: hidden; }
+        .safety-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .safety-icon { font-size: 3rem; margin-bottom: 15px; display: block; }
+        .safety-danger .safety-icon { color: #d32f2f; }
+        .safety-prohibit .safety-icon { color: #f57c00; }
+        .safety-oblig .safety-icon { color: #1976d2; }
+
+        /* RECOMENDACIONES DE USO */
+        .usage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .usage-item { background: #f8f9fa; padding: 20px; border-radius: 10px; display: flex; align-items: flex-start; gap: 15px; transition: 0.3s; }
+        .usage-item:hover { background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .usage-icon { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--sena-green); font-size: 1.2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-shrink: 0; }
+
+        /* RETO PRINCIPAL */
+        .challenge-box { background: #fff3e0; border: 2px dashed var(--sena-orange); border-radius: 15px; padding: 30px; margin-top: 20px; text-align: center; }
+        .reflection-input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 10px; margin-top: 15px; font-family: inherit; resize: vertical; min-height: 100px; transition: 0.3s; }
+        .reflection-input:focus { border-color: var(--sena-blue); outline: none; }
+
+        /* SOPA DE LETRAS */
+        #wordSearchGrid {
+    display: grid;
+    grid-template-columns: repeat(10, 35px); /* 10 columnas fijas */
+    gap: 5px;
+    justify-content: center;
+    margin: 20px auto;
+    user-select: none; /* Evita que se resalte el texto al hacer clic rápido */
+}
+        .ws-cell { width: 30px; height: 30px; background: #eee; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .ws-cell:hover { background: #ddd; }
+        .ws-cell.selected { background: var(--sena-orange); color: white; transform: scale(1.1); }
+        .ws-cell.found { background: var(--sena-green); color: white; animation: popIn 0.3s; }
+        .word-list { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+        .word-tag { background: #e3f2fd; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; color: var(--sena-blue); }
+        .word-tag.found { background: var(--sena-green); color: white; text-decoration: line-through; opacity: 0.7; }
+
+        /* OVERLAY FINAL */
+        #congratsOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,50,77,0.95); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; text-align: center; color: white; }
+        .badge-final { width: 250px; animation: badgePop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px; filter: drop-shadow(0 0 30px rgba(255,215,0,0.6)); }
+        @keyframes badgePop { from { transform: scale(0) rotate(-180deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
+            .sidebar { width: 100%; position: static; }
+            .presentation-content { grid-template-columns: 1fr; }
+            .narrative-box { flex-direction: column; text-align: center; }
+            #wordSearchGrid { grid-template-columns: repeat(12, 22px); gap: 2px; }
+            .ws-cell { width: 22px; height: 22px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="imagenes/Logos/sena.png" alt="SENA" style="height: 50px;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <div class="header-title">CAPÍTULO 7: ESTRUCTURA Y DESARROLLO DEL COMBATE</div>
+        <img src="imagenes/Logos/tecnoacademia.jpeg" alt="TecnoAcademia" style="height: 50px;">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-route"></i> Ruta de Aprendizaje</h3>
+            
+            <div id="menu-1" class="menu-item active" onclick="showSection(1)">
+                <i class="fas fa-stopwatch" style="width: 25px; color: var(--sena-orange); font-size: 1.2rem;"></i> 1. Duración y Estructura
+            </div>
+            <div id="menu-2" class="menu-item" onclick="showSection(2)">
+                <i class="fas fa-map-marker-alt" style="width: 25px; color: var(--sena-blue); font-size: 1.2rem;"></i> 2. Posicionamiento Inicial
+            </div>
+            <div id="menu-3" class="menu-item" onclick="showSection(3)">
+                <i class="fas fa-flag-checkered" style="width: 25px; color: var(--sena-green); font-size: 1.2rem;"></i> 3. Procedimiento de Inicio
+            </div>
+            <div id="menu-4" class="menu-item" onclick="showSection(4)">
+                <i class="fas fa-hand-paper" style="width: 25px; color: #d32f2f; font-size: 1.2rem;"></i> 4. Finalización de Ronda
+            </div>
+            <div id="menu-5" class="menu-item" onclick="showSection(5)">
+                <i class="fas fa-user-clock" style="width: 25px; color: var(--sena-orange); font-size: 1.2rem;"></i> 5. Incomparecencia
+            </div>
+            <div id="menu-6" class="menu-item" onclick="showSection(6)">
+                <i class="fas fa-brain" style="width: 25px; color: var(--sena-blue); font-size: 1.2rem;"></i> 6. Análisis Estratégico
+            </div>
+            <div id="menu-7" class="menu-item" onclick="showSection(7)">
+                <i class="fas fa-gamepad" style="width: 25px; color: var(--sena-green); font-size: 1.2rem;"></i> 7. Reto: Sopa de Letras
+            </div>
+
+            <div class="progress-sidebar">
+                <span class="progress-label">Progreso del Módulo: <span id="progress-text">0%</span></span>
+                <div class="progress-bg">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+
+<!-- SECCIÓN 1: DURACIÓN Y ESTRUCTURA -->
+            <section id="sec-1" class="activity-section active">
+                <div class="section-header"><h2><i class="fas fa-stopwatch"></i> Art. 7.1. Duración y Estructura</h2></div>
+                <div class="narrative-box">
+                    <img src="imagenes/Personajes/tecnoBot/para talleres_Mesa de trabajo 1.png" alt="TecnoBot" class="narrative-avatar" style="animation: float 3s infinite ease-in-out;">
+                    <div class="narrative-text">
+                        <strong>Regla Fundamental:</strong><br>
+                        "¡Maker! Administrar el tiempo es vital. Un combate es rápido y explosivo. Gana quien logre dominar el Dohyo en este esquema de tiempo y rondas."
+                    </div>
+                </div>
+
+                <div class="usage-grid">
+                    <div class="usage-item" style="border-top: 4px solid var(--sena-blue);">
+                        <div class="usage-icon"><i class="fas fa-layer-group"></i></div>
+                        <div>
+                            <h4 style="color: var(--sena-blue);">Máximo 3 Rondas</h4>
+                            <p>Un combate (Match) está compuesto por un máximo de tres (3) rondas de enfrentamiento directo.</p>
+                        </div>
+                    </div>
+                    <div class="usage-item" style="border-top: 4px solid var(--sena-orange);">
+                        <div class="usage-icon"><i class="fas fa-clock"></i></div>
+                        <div>
+                            <h4 style="color: var(--sena-orange);">3 Minutos Globales</h4>
+                            <p>Duración máxima total. El cronómetro se pausa en interrupciones. <strong>No existe límite de tiempo individual</strong> para cada ronda.</p>
+                        </div>
+                    </div>
+                    <div class="usage-item" style="border-top: 4px solid var(--sena-green);">
+                        <div class="usage-icon"><i class="fas fa-trophy"></i></div>
+                        <div>
+                            <h4 style="color: var(--sena-green);">Victoria Inmediata</h4>
+                            <p>El primer robot en obtener <strong>dos (2) Puntos Yuko</strong> es declarado ganador definitivo del combate.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 30px;"><button class="btn-primary" onclick="completeStep(1, 2)">Siguiente Paso <i class="fas fa-arrow-right"></i></button></div>
+            </section>
+
+            <!-- SECCIÓN 2: POSICIONAMIENTO -->
+            <section id="sec-2" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-map-marker-alt"></i> Art. 7.2. Posicionamiento Inicial</h2></div>
+                <p style="margin-bottom: 20px;">La estrategia comienza antes de encender el robot. Conoce los pasos obligatorios para ubicar tu máquina en el Dohyo:</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--sena-blue); box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;">
+                        <h1 style="color: #e0e0e0; font-size: 3rem; margin: 0; font-family: 'Montserrat';">1</h1>
+                        <div>
+                            <h4 style="color: var(--sena-blue); margin-bottom: 5px;">Ingreso Autorizado</h4>
+                            <p style="margin: 0;">Por instrucción explícita del Juez, los capitanes ingresarán al área de combate.</p>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--sena-orange); box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;">
+                        <h1 style="color: #e0e0e0; font-size: 3rem; margin: 0; font-family: 'Montserrat';">2</h1>
+                        <div>
+                            <h4 style="color: var(--sena-orange); margin-bottom: 5px;">Ubicación tras la Shikiri</h4>
+                            <p style="margin: 0;">Cada capitán colocará su robot en un semicírculo del Dohyo, posicionado <strong>completamente detrás</strong> de su respectiva línea de salida (Shikiri).</p>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 12px; border-left: 5px solid var(--sena-green); box-shadow: var(--shadow); display: flex; align-items: center; gap: 20px;">
+                        <h1 style="color: #e0e0e0; font-size: 3rem; margin: 0; font-family: 'Montserrat';">3</h1>
+                        <div>
+                            <h4 style="color: var(--sena-green); margin-bottom: 5px;">Libertad de Orientación</h4>
+                            <p style="margin: 0;">La orientación del robot es libre (de frente, diagonal o de lado), siempre y cuando <strong>ninguna pieza física cruce la línea</strong> antes del arranque.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;"><button class="btn-primary" onclick="completeStep(2, 3)">Comprendido, avanzar al inicio <i class="fas fa-arrow-right"></i></button></div>
+            </section>
+
+            <!-- SECCIÓN 3: PROCEDIMIENTO DE INICIO -->
+            <section id="sec-3" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-flag-checkered"></i> Art. 7.3. Procedimiento de Inicio</h2></div>
+                <p style="margin-bottom: 20px;">El arranque es el momento más crítico. Sigue estrictamente este orden:</p>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openTab(event, 'paso1')">1. Señal</button>
+                    <button class="tab-btn" onclick="openTab(event, 'paso2')">2. Activación</button>
+                    <button class="tab-btn" onclick="openTab(event, 'paso3')">3. Temporizador</button>
+                </div>
+
+                <div id="paso1" class="tab-content active">
+                    <div class="challenge-box" style="background: #e3f2fd; border-color: var(--sena-blue);">
+                        <i class="fas fa-bullhorn" style="font-size: 3rem; color: var(--sena-blue); margin-bottom: 15px;"></i>
+                        <h3>La Señal del Juez</h3>
+                        <p>Una vez posicionados, el juez preguntará si están listos y dará la voz de inicio gritando: <strong>"¡Hakkeyoi!"</strong></p>
+                    </div>
+                </div>
+                <div id="paso2" class="tab-content">
+                    <div class="challenge-box" style="background: #fff3e0; border-color: var(--sena-orange);">
+                        <i class="fas fa-power-off" style="font-size: 3rem; color: var(--sena-orange); margin-bottom: 15px;"></i>
+                        <h3>Encendido y Evacuación</h3>
+                        <p>Inmediatamente, ambos capitanes presionan el interruptor y evacúan el Dohyo, quedando fuera del perímetro de seguridad.</p>
+                    </div>
+                </div>
+                <div id="paso3" class="tab-content">
+                    <div class="challenge-box" style="background: #f0fdf4; border-color: var(--sena-green);">
+                        <i class="fas fa-stopwatch" style="font-size: 3rem; color: var(--sena-green); margin-bottom: 15px;"></i>
+                        <h3>Temporizador de 5 Segundos</h3>
+                        <p>El robot ejecuta su retraso de seguridad de exactamente 5 segundos (completamente estático). El combate inicia oficialmente en el instante en que ejecutan su primer movimiento autónomo.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;"><button class="btn-primary" onclick="completeStep(3, 4)">Avanzar <i class="fas fa-arrow-right"></i></button></div>
+            </section>
+
+            <!-- SECCIÓN 4: FINALIZACIÓN -->
+            <section id="sec-4" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-hand-paper"></i> Art. 7.4. Finalización y Recuperación</h2></div>
+                <p>¿Cuándo se detiene la acción y qué deben hacer los equipos?</p>
+
+                <div class="usage-grid" style="margin-top: 25px;">
+                    <div class="usage-item" style="border-left: 4px solid #d32f2f; display: block; text-align: center;">
+                        <i class="fas fa-microphone-alt" style="font-size: 2.5rem; color: #d32f2f; margin-bottom: 15px;"></i>
+                        <h4>1. La Orden de Parada</h4>
+                        <p>La ronda finaliza cuando el Juez decreta Yuko, penalización o empate técnico gritando: <strong>"¡Yame!"</strong> o <strong>"¡Alto!"</strong>.</p>
+                    </div>
+                    <div class="usage-item" style="border-left: 4px solid var(--sena-blue); display: block; text-align: center;">
+                        <i class="fas fa-user-shield" style="font-size: 2.5rem; color: var(--sena-blue); margin-bottom: 15px;"></i>
+                        <h4>2. Ingreso Controlado</h4>
+                        <p>Solo al escuchar la orden, los capitanes están autorizados a ingresar al área para apagar sus robots.</p>
+                    </div>
+                    <div class="usage-item" style="border-left: 4px solid var(--sena-green); display: block; text-align: center;">
+                        <i class="fas fa-stopwatch-20" style="font-size: 2.5rem; color: var(--sena-green); margin-bottom: 15px;"></i>
+                        <h4>3. Tiempo de Recuperación</h4>
+                        <p>Dispondrán de un <strong>máximo de 30 segundos</strong> para limpiar llantas y reposicionar los robots para la siguiente ronda.</p>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;"><button class="btn-primary" onclick="completeStep(4, 5)">Entendido <i class="fas fa-arrow-right"></i></button></div>
+            </section>
+
+            <!-- SECCIÓN 5: INCOMPARECENCIA -->
+            <section id="sec-5" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-user-clock"></i> Art. 7.5. Incomparecencia</h2></div>
+                
+                <div style="background: #fff; border: 2px dashed #d32f2f; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 10px 20px rgba(211, 47, 47, 0.1);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #d32f2f; margin-bottom: 20px;"></i>
+                    <h3 style="color: #d32f2f; font-family: 'Montserrat';">Sanción por Retraso</h3>
+                    <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Si un equipo no se presenta tras ser llamado, se le otorgará un tiempo de gracia máximo de <strong>un (1) minuto</strong>.</p>
+                    <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-top: 20px; display: inline-block;">
+                        <strong>Consecuencia:</strong> Si el plazo se cumple y no están listos, se declara incomparecencia y el oponente gana automáticamente <strong>(obtiene 2 Puntos Yuko)</strong>.
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 30px;"><button class="btn-primary" onclick="completeStep(5, 6)">Avanzar al Análisis <i class="fas fa-arrow-right"></i></button></div>
+            </section>
+
+            <!-- SECCIÓN 6: REFLEXIÓN -->
+            <section id="sec-6" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-brain"></i> Análisis Estratégico</h2></div>
+                <div class="challenge-box" style="text-align: left; background: white;">
+                    <h3 style="color: var(--sena-blue);"><i class="fas fa-chess-knight"></i> Reflexión de Combate</h3>
+                    <p>El reglamento permite orientación libre (frente, diagonal, lado) detrás de la línea Shikiri. Además, exige un retraso estático de 5 segundos.</p>
+                    <p><strong>¿Por qué crees que el temporizador de 5 segundos es crucial para la seguridad de los participantes antes de iniciar el combate?</strong></p>
+                    
+                    <textarea class="reflection-input" id="reflexion2" placeholder="Escribe tu análisis táctico y de seguridad aquí..."></textarea>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <p style="font-size: 0.85rem; color: var(--text-gray);">*Asegúrate de guardar tu respuesta antes del juego final.</p>
+                        <button class="btn-primary" onclick="saveReflection(2)">
+                            <i class="fas fa-save"></i> Guardar y Jugar
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 7: SOPA DE LETRAS -->
+            <section id="sec-7" class="activity-section">
+                <div class="section-header"><h2><i class="fas fa-gamepad"></i> Sopa de Letras: Léxico del Combate</h2></div>
+                
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--sena-green);">
+                    <p>Encuentra las 5 palabras clave del reglamento. ¡Concéntrate Maker!</p>
+                </div>
+
+                <div class="word-list" id="wordList"></div>
+                <div id="wordSearchGrid"></div>
+
+                <div id="finalBtnArea" style="text-align: center; margin-top: 30px; display: none; animation: fadeIn 0.8s ease;">
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 15px; border: 2px solid var(--sena-green); margin-bottom: 20px;">
+                        <h3 style="color: var(--sena-green); margin-bottom: 10px;"><i class="fas fa-check-circle"></i> ¡Combate Dominado!</h3>
+                        <p>Has interiorizado a la perfección las reglas de la arena y el procedimiento de inicio.</p>
+                    </div>
+                    <button class="btn-primary" onclick="finishModule()" style="padding: 15px 40px; font-size: 1.1rem;">
+                        <i class="fas fa-medal"></i> FINALIZAR Y RECLAMAR INSIGNIA
+                    </button>
+                </div>
+            </section>
+       
+        </main>
+    </div>
+
+   <div id="congratsOverlay">
+        <h1 style="font-family: 'Montserrat'; font-size: 3rem; margin-bottom: 20px; text-transform: uppercase; color: #FFD700; text-shadow: 0 4px 10px rgba(0,0,0,0.5);">¡FELICITACIONES!</h1>
+        <img src="imagenes/Insignias/insignias-mohs/02-insignias-mohs-oro.png" alt="Insignia Oro" class="badge-final">
+        <h2 style="font-family: 'Montserrat';">Insignia de Juez Desbloqueada</h2>
+        <p style="font-size: 1.2rem; max-width: 600px;">Conoces la estructura del combate a la perfección y estás listo para pisar el Dohyo.</p>
+        
+        <button onclick="window.location.href='index.html'" style="margin-top: 30px; background: white; color: var(--sena-blue); padding: 15px 40px; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+            <i class="fas fa-home"></i> Volver al Centro de Comando
+        </button>
+    </div>
+
+    <script>
+        // ESTADO DEL PROGRESO
+        let currentProgress = 0;
+        const totalSteps = 7;
+        const visitedSteps = new Set([1]);
+
+        function completeStep(current, next) {
+            visitedSteps.add(next);
+            updateProgress();
+            
+            // Marcar menú actual como completado
+            document.getElementById(`menu-${current}`).classList.add('completed');
+            
+            // Ir a siguiente sección
+            showSection(next);
+        }
+
+        function showSection(id) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.activity-section').forEach(sec => sec.classList.remove('active'));
+            // Mostrar la seleccionada
+            document.getElementById(`sec-${id}`).classList.add('active');
+            
+            // Actualizar menú lateral
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(`menu-${id}`).classList.add('active');
+            
+            // Scroll arriba
+            window.scrollTo(0,0);
+            
+            // Si visita una sección manualmente, contarla para progreso
+            visitedSteps.add(id);
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((visitedSteps.size / totalSteps) * 100);
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').textContent = `${percent}%`;
+        }
+
+        // TABS LOGIC
+        function openTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // REFLEXION LOGIC
+        function saveReflection(id) {
+            const text = document.getElementById(`reflexion${id}`).value;
+            if(text.length > 10) {
+                alert("¡Respuesta registrada con éxito!");
+                if(id === 1) completeStep(3, 4);
+                if(id === 2) completeStep(6, 7);
+            } else {
+                alert("Por favor, escribe una respuesta más completa.");
+            }
+        }
+
+        const words = ['HAKKEYOI', 'SHIKIRI', 'YUKO', 'YAME', 'TIEMPO'];
+        const gridData = [
+            ['H','A','K','K','E','Y','O','I','R','M'], 
+            ['X','Y','P','S','H','I','K','I','R','I'], 
+            ['Y','U','K','O','S','T','R','I','A','Q'], 
+            ['M','E','Y','A','M','E','C','A','W','Z'], 
+            ['T','I','E','M','P','O','I','P','O','L'], 
+            ['B','V','C','X','Z','A','S','D','F','G'], 
+            ['H','J','K','L','Ñ','P','O','I','U','Y'], 
+            ['Q','W','E','R','T','Y','U','I','O','P']  
+        ];
+
+        let wordsFound = {
+            'HAKKEYOI': false,
+            'SHIKIRI': false,
+            'YUKO': false,
+            'YAME': false,
+            'TIEMPO': false
+        };
+
+// Asegúrate de que initWordSearch use estas nuevas dimensiones
+function initWordSearch() {
+    const gridContainer = document.getElementById('wordSearchGrid');
+    const listContainer = document.getElementById('wordList');
+    
+    if(!gridContainer || !listContainer) return;
+
+    gridContainer.innerHTML = ''; 
+    listContainer.innerHTML = '';
+
+    // Renderizar lista de palabras a buscar (sin evento click, solo visuales)
+    words.forEach(word => {
+        const tag = document.createElement('div');
+        tag.className = 'word-tag';
+        tag.id = `tag-${word}`;
+        tag.innerText = word;
+        listContainer.appendChild(tag);
+    });
+
+    // Renderizar el Grid de 10x8
+    gridData.forEach((row) => {
+        row.forEach((char) => {
+            const cell = document.createElement('div');
+            cell.className = 'ws-cell';
+            cell.innerText = char;
+            cell.onclick = function() {
+                // Si la celda ya es parte de una palabra encontrada, no hacer nada
+                if (this.classList.contains('found')) return; 
+                
+                this.classList.toggle('selected');
+                verificarPalabraSeleccionada(); // Llama a la nueva función
+            };
+            gridContainer.appendChild(cell);
+        });
+    });
+}
+
+function verificarPalabraSeleccionada() {
+    // Obtener todas las celdas seleccionadas actualmente (en orden de lectura)
+    const selectedCells = Array.from(document.querySelectorAll('.ws-cell.selected'));
+    const selectedText = selectedCells.map(c => c.innerText).join('');
+    
+    // Verificar si el texto seleccionado coincide con alguna de nuestras palabras
+    words.forEach(word => {
+        if (!wordsFound[word] && selectedText === word) {
+            markWordFound(word, selectedCells);
+        }
+    });
+}
+
+function markWordFound(word, cells = []) {
+    wordsFound[word] = true;
+    document.getElementById(`tag-${word}`).classList.add('found');
+    
+    // Cambiar el color de las celdas seleccionadas a verde (encontrado) y quitar selección
+    cells.forEach(c => {
+        c.classList.remove('selected');
+        c.classList.add('found');
+    });
+    
+    // Verificar si TODAS las palabras han sido encontradas
+    const allFound = Object.values(wordsFound).every(status => status === true);
+    
+    if(allFound) {
+        // Mostrar área final con animación
+        document.getElementById('finalBtnArea').style.display = 'block';
+        visitedSteps.add(7);
+        updateProgress();
+    }
+}
+        // FINALIZAR MÓDULO
+        function finishModule() {
+            const storageKey = 'makerCourseState'; 
+            const savedState = sessionStorage.getItem(storageKey);
+            const currentModuleId = 4;
+            const nextModuleId = 5;
+
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(currentModuleId)) state.completedModules.push(currentModuleId);
+                if (!state.unlockedModules.includes(nextModuleId)) state.unlockedModules.push(nextModuleId);
+                sessionStorage.setItem(storageKey, JSON.stringify(state));
+                
+                // Mostrar Animación
+                document.getElementById('congratsOverlay').style.display = 'flex';
+            } else {
+                alert("Error de sesión. Volviendo al inicio.");
+                window.location.href = 'index.html';
+            }
+        }
+
+        // INICIALIZAR
+        initWordSearch();
+        updateProgress();
+
+    </script>
+</body>
+</html>
