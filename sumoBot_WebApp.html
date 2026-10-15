@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SumoBot · TecnoAcademia SENA</title>
+<!-- Archivo 100% autónomo: sin fuentes ni librerías externas.
+     La tipografía usa la fuente del sistema operativo; la exportación a
+     Excel se genera con un escritor de .xlsx propio, incluido más abajo. -->
+<style>
+:root{
+  --verde:#39A900; --verde-osc:#2B7F00; --verde-suave:#E9F6E2; --verde-linea:#C2E4B2;
+  --tinta:#12211A; --grafito:#33433B; --gris:#6E7B75; --gris-linea:#E1E7E3; --gris-suave:#F4F7F5;
+  --papel:#FFFFFF; --fondo:#F7F9F8;
+  --ambar:#E39100; --ambar-suave:#FFF3DC; --arena:#F3E3C3;
+  --rojo:#C1362B; --rojo-suave:#FBEBE9;
+  --azul:#1F4E79; --azul-suave:#E8F0F7;
+  --r-s:8px; --r-m:14px; --r-l:22px;
+  --sombra:0 1px 2px rgba(18,33,26,.06), 0 8px 24px -14px rgba(18,33,26,.28);
+  --sombra-alta:0 2px 4px rgba(18,33,26,.06), 0 24px 48px -20px rgba(18,33,26,.35);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--fondo);color:var(--tinta);
+  font-family:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.cifra,.reloj{font-family:"Archivo","Barlow",system-ui,sans-serif;letter-spacing:-.015em}
+h1{font-size:1.5rem;font-weight:700;margin:0}
+h2{font-size:1.2rem;font-weight:700;margin:0}
+h3{font-size:1rem;font-weight:700;margin:0}
+p{margin:0 0 .6em}
+a{color:var(--verde-osc)}
+img{max-width:100%}
+:focus-visible{outline:3px solid var(--ambar);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+
+/* ---------- cabecera institucional ---------- */
+.tope{background:var(--papel);border-bottom:1px solid var(--gris-linea);position:sticky;top:env(safe-area-inset-top,0px);z-index:40}
+.tope__interno{max-width:1420px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 20px}
+.tope__logos{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{height:46px;width:auto;max-width:150px;object-fit:contain;display:block}
+.tope__titulo{margin-left:auto;text-align:right;min-width:0}
+.tope__titulo strong{display:block;font-family:"Archivo";font-size:1.05rem;font-weight:800;letter-spacing:-.02em}
+.tope__titulo span{display:block;font-size:.78rem;color:var(--gris)}
+.tope__franja{height:4px;background:linear-gradient(90deg,var(--verde) 0 38%,var(--tinta) 38% 62%,var(--ambar) 62% 100%)}
+
+/* ---------- estructura ---------- */
+.capa{max-width:1420px;margin:0 auto;display:grid;grid-template-columns:236px minmax(0,1fr);gap:26px;padding:22px 20px 80px}
+.nav{position:sticky;top:calc(96px + env(safe-area-inset-top,0px));align-self:start;display:flex;flex-direction:column;gap:3px}
+.nav__b{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-s);border:0;background:transparent;
+  font:inherit;font-weight:600;color:var(--grafito);cursor:pointer;text-align:left;width:100%;transition:background .15s,color .15s}
+.nav__b:hover{background:var(--gris-suave)}
+.nav__b[aria-current="true"]{background:var(--verde-suave);color:var(--verde-osc);box-shadow:inset 3px 0 0 var(--verde)}
+.nav__b .pt{margin-left:auto;font-size:.72rem;background:var(--tinta);color:#fff;border-radius:999px;padding:1px 7px;font-weight:700}
+.nav__sep{height:1px;background:var(--gris-linea);margin:10px 4px}
+main{min-width:0}
+.pag__tope{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.pag__tope p{color:var(--gris);margin:2px 0 0;font-size:.92rem}
+.pag__acc{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- piezas ---------- */
+.tarjeta{background:var(--papel);border:1px solid var(--gris-linea);border-radius:var(--r-m);box-shadow:var(--sombra)}
+.tarjeta__tope{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--gris-linea)}
+.tarjeta__cuerpo{padding:18px}
+.rejilla{display:grid;gap:16px}
+.r2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.r3{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.r4{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+
+.b{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:var(--r-s);
+  padding:9px 15px;font:inherit;font-weight:600;cursor:pointer;background:var(--gris-suave);color:var(--grafito);
+  transition:transform .08s,background .15s,box-shadow .15s;white-space:nowrap}
+.b:hover{background:var(--gris-linea)}
+.b:active{transform:translateY(1px)}
+.b--p{background:var(--verde);color:#fff}
+.b--p:hover{background:var(--verde-osc)}
+.b--osc{background:var(--tinta);color:#fff}
+.b--osc:hover{background:#000}
+.b--linea{background:transparent;border-color:var(--gris-linea);color:var(--grafito)}
+.b--linea:hover{background:var(--gris-suave)}
+.b--peligro{background:var(--rojo-suave);color:var(--rojo);border-color:#f0cdc8}
+.b--peligro:hover{background:#f6ddd9}
+.b--ambar{background:var(--ambar);color:#fff}
+.b--g{padding:13px 22px;font-size:1.05rem}
+.b--xs{padding:5px 9px;font-size:.82rem}
+.b[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.fila-b{display:flex;gap:8px;flex-wrap:wrap}
+
+.et{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:700;padding:3px 9px;border-radius:999px;
+  background:var(--gris-suave);color:var(--grafito);white-space:nowrap}
+.et--pendiente{background:var(--gris-suave);color:var(--gris)}
+.et--proximo{background:var(--azul-suave);color:var(--azul)}
+.et--curso{background:var(--ambar-suave);color:#8a5a00}
+.et--pausado{background:var(--arena);color:#7a5a12}
+.et--finalizado{background:var(--verde-suave);color:var(--verde-osc)}
+.et--reprogramado{background:#EFE8F7;color:#5B3E8E}
+.et--eliminado{background:var(--rojo-suave);color:var(--rojo)}
+.punto{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+
+.dato{padding:16px 18px}
+.dato .cifra{font-size:2.1rem;font-weight:800;line-height:1;display:block}
+.dato .rotulo{font-size:.84rem;color:var(--gris);margin-top:5px;display:block}
+.dato--acento{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.dato--acento .rotulo{color:#b9c6bf}
+
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th{text-align:left;font-weight:700;font-size:.78rem;color:var(--gris);padding:9px 12px;border-bottom:1px solid var(--gris-linea);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--gris-linea);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--gris-suave)}
+.tabla-cont{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.num{font-variant-numeric:tabular-nums}
+
+input,select,textarea{font:inherit;color:inherit;background:var(--papel);border:1px solid var(--gris-linea);
+  border-radius:var(--r-s);padding:9px 11px;width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--verde);box-shadow:0 0 0 3px var(--verde-suave);outline:none}
+label{display:block;font-size:.82rem;font-weight:600;color:var(--grafito);margin-bottom:5px}
+.campo{margin-bottom:14px}
+.pista{font-size:.8rem;color:var(--gris);margin-top:5px}
+
+/* ---------- TecnoBot ---------- */
+.bot{display:flex;align-items:flex-start;gap:12px}
+.bot__img{width:56px;height:56px;flex:none;object-fit:contain}
+.bot__globo{position:relative;background:var(--verde-suave);border:1px solid var(--verde-linea);border-radius:var(--r-m);
+  padding:11px 15px;font-size:.93rem;color:#22491A;max-width:62ch}
+.bot__globo::before{content:"";position:absolute;left:-7px;top:16px;width:12px;height:12px;background:var(--verde-suave);
+  border-left:1px solid var(--verde-linea);border-bottom:1px solid var(--verde-linea);transform:rotate(45deg)}
+.bot__globo b{color:var(--verde-osc)}
+.bot--flota{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;align-items:flex-end;
+  flex-direction:row-reverse;pointer-events:none;max-width:min(430px,calc(100vw - 36px))}
+.bot--flota .bot__img{width:64px;height:64px;filter:drop-shadow(0 8px 16px rgba(18,33,26,.25))}
+.bot--flota .bot__globo{background:var(--papel);border-color:var(--gris-linea);box-shadow:var(--sombra-alta);color:var(--tinta);
+  animation:entra .28s ease-out}
+.bot--flota .bot__globo::before{left:auto;right:-7px;border:0;border-right:1px solid var(--gris-linea);border-top:1px solid var(--gris-linea);background:var(--papel)}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.vacio{text-align:center;padding:42px 20px}
+.vacio .bot{flex-direction:column;align-items:center;text-align:center;gap:14px}
+.vacio .bot__img{width:92px;height:92px}
+.vacio .bot__globo::before{display:none}
+
+/* ---------- pantalla de combate ---------- */
+.ring{background:var(--papel);border:1px solid var(--gris-linea);border-radius:var(--r-l);overflow:hidden;box-shadow:var(--sombra)}
+.ring__tope{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 18px;background:var(--tinta);color:#fff}
+.ring__tope .id{font-family:"Archivo";font-weight:800;font-size:1.05rem}
+.ring__tope .fase{color:#aebbb4;font-size:.9rem}
+.ring__tope .der{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.duelo{display:grid;grid-template-columns:1fr minmax(290px,.86fr) 1fr;align-items:stretch}
+.lado{padding:26px 22px;display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0}
+.lado--a{background:linear-gradient(180deg,var(--verde-suave),#fff 78%);border-right:1px solid var(--gris-linea)}
+.lado--b{background:linear-gradient(180deg,var(--gris-suave),#fff 78%);border-left:1px solid var(--gris-linea)}
+.lado__rot{font-size:.78rem;font-weight:700;color:var(--gris)}
+.lado--a .lado__rot{color:var(--verde-osc)}
+.lado__nombre{font-family:"Archivo";font-size:clamp(1.5rem,3.1vw,2.35rem);font-weight:800;line-height:1.05;word-break:break-word}
+.lado__meta{font-size:.95rem;color:var(--grafito)}
+.lado__robot{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--tinta);margin-top:2px}
+.lado__robot i{font-style:normal;color:var(--gris);font-weight:500}
+.lado--gana{box-shadow:inset 0 0 0 3px var(--verde)}
+.centro{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:22px 16px;
+  background:
+    radial-gradient(circle at 50% 46%, transparent 0 96px, var(--arena) 96px 101px, transparent 101px),
+    radial-gradient(circle at 50% 46%, transparent 0 118px, rgba(18,33,26,.07) 118px 119px, transparent 119px),
+    var(--papel)}
+.vs{font-family:"Archivo";font-weight:800;font-size:.95rem;color:var(--gris);letter-spacing:.32em;text-indent:.32em}
+.reloj{font-size:clamp(3.4rem,9vw,5.3rem);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;transition:color .2s}
+.reloj--corre{color:var(--verde-osc)}
+.reloj--alerta{color:var(--ambar)}
+.reloj--fin{color:var(--rojo)}
+.rondas{display:flex;align-items:center;gap:8px}
+.rondas__p{width:15px;height:15px;border-radius:50%;border:2px solid var(--gris-linea);background:var(--papel)}
+.rondas__p--a{background:var(--verde);border-color:var(--verde)}
+.rondas__p--b{background:var(--tinta);border-color:var(--tinta)}
+.rondas__t{font-size:.82rem;color:var(--gris);font-weight:600}
+.juez{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px 18px;border-top:1px solid var(--gris-linea);background:var(--gris-suave)}
+.juez .b{width:100%;padding:17px 14px;font-size:1.02rem;font-weight:700}
+.juez .b--a{background:var(--verde);color:#fff}
+.juez .b--a:hover{background:var(--verde-osc)}
+.juez .b--b{background:var(--tinta);color:#fff}
+.juez .b--b:hover{background:#000}
+.pie-ring{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px 18px;border-top:1px solid var(--gris-linea)}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(57,169,0,.35)}70%{box-shadow:0 0 0 16px rgba(57,169,0,0)}100%{box-shadow:0 0 0 0 rgba(57,169,0,0)}}
+.pulsa{animation:pulso 1.6s ease-out 2}
+
+/* ---------- llaves ---------- */
+.llaves{display:flex;gap:20px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch}
+.llave-col{min-width:236px;flex:none;display:flex;flex-direction:column;gap:12px}
+.llave-col__t{font-size:.8rem;font-weight:700;color:var(--gris);padding-bottom:6px;border-bottom:2px solid var(--gris-linea)}
+.llave-col:first-child .llave-col__t{border-bottom-color:var(--verde)}
+.mini{background:var(--papel);border:1px solid var(--gris-linea);border-radius:var(--r-s);overflow:hidden;cursor:pointer;
+  transition:border-color .15s,box-shadow .15s}
+.mini:hover{border-color:var(--verde);box-shadow:var(--sombra)}
+.mini__n{font-size:.7rem;color:var(--gris);padding:5px 10px 0;font-weight:700}
+.mini__e{display:flex;align-items:center;gap:8px;padding:7px 10px;font-size:.9rem}
+.mini__e+.mini__e{border-top:1px solid var(--gris-linea)}
+.mini__e--gana{background:var(--verde-suave);font-weight:700}
+.mini__e--pierde{color:var(--gris)}
+.mini__e .s{margin-left:auto;font-size:.72rem;color:var(--gris)}
+.mini--curso{border-color:var(--ambar);box-shadow:0 0 0 2px var(--ambar-suave)}
+
+/* ---------- misc ---------- */
+.lista-comb{display:flex;flex-direction:column;gap:8px}
+.comb{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--papel);border:1px solid var(--gris-linea);
+  border-radius:var(--r-s);flex-wrap:wrap}
+.comb--activo{border-color:var(--verde);box-shadow:0 0 0 2px var(--verde-suave)}
+.comb__n{font-family:"Archivo";font-weight:800;font-size:1.05rem;min-width:38px}
+.comb__e{flex:1;min-width:190px}
+.comb__e b{font-weight:600}
+.comb__acc{margin-left:auto;display:flex;gap:6px}
+.sep{height:1px;background:var(--gris-linea);margin:20px 0}
+.chip{display:inline-block;background:var(--gris-suave);border-radius:999px;padding:2px 9px;font-size:.8rem;margin:0 4px 4px 0}
+.pos{font-family:"Archivo";font-weight:800;font-size:1.05rem;width:30px}
+.pos--1{color:var(--verde)}
+.marca-caja{border:1.5px dashed var(--gris-linea);border-radius:var(--r-s);padding:12px;text-align:center;background:var(--gris-suave)}
+.marca-caja img{height:54px;object-fit:contain;margin:0 auto 8px;display:block}
+.marca-caja code{font-size:.74rem;color:var(--gris);word-break:break-all}
+
+.modal-fondo{position:fixed;inset:0;background:rgba(18,33,26,.55);backdrop-filter:blur(2px);z-index:100;display:flex;
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.modal{background:var(--papel);border-radius:var(--r-m);box-shadow:var(--sombra-alta);width:min(620px,100%);max-height:88vh;
+  overflow:auto;animation:entra .2s ease-out}
+.modal__t{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--gris-linea)}
+.modal__c{padding:20px}
+.modal__p{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--gris-linea);flex-wrap:wrap}
+.avisos{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:120;
+  display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(520px,calc(100vw - 32px))}
+.aviso{background:var(--tinta);color:#fff;padding:11px 17px;border-radius:999px;box-shadow:var(--sombra-alta);font-weight:600;
+  font-size:.92rem;animation:entra .2s ease-out;text-align:center}
+.aviso--ok{background:var(--verde-osc)}
+.aviso--mal{background:var(--rojo)}
+.estado-sync{font-size:.76rem;color:var(--gris);display:flex;align-items:center;gap:6px;padding:8px 12px}
+
+@media (max-width:980px){
+  .capa{grid-template-columns:1fr;gap:16px;padding:14px 14px 90px}
+  .nav{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px}
+  .nav__b{width:auto;white-space:nowrap}
+  .nav__b[aria-current="true"]{box-shadow:inset 0 -3px 0 var(--verde)}
+  .nav__sep{display:none}
+  .duelo{grid-template-columns:1fr}
+  .lado--a{border-right:0;border-bottom:1px solid var(--gris-linea)}
+  .lado--b{border-left:0;border-top:1px solid var(--gris-linea)}
+  .lado{padding:18px}
+  .centro{order:-1;background:var(--papel);border-bottom:1px solid var(--gris-linea)}
+  .tope__titulo{display:none}
+  .bot--flota{display:none}
+  .logo{height:36px}
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --papel:#141A17; --fondo:#0D1210; --tinta:#F2F6F3; --grafito:#D3DCD7; --gris:#95A39C;
+    --gris-linea:#27332C; --gris-suave:#1A221E; --verde-suave:#16301A; --verde-linea:#2E5B23;
+    --ambar-suave:#3A2A06; --rojo-suave:#3A1512; --azul-suave:#12283A; --arena:#3E3521;
+    color-scheme:dark;
+  }
+  :root:not([data-theme="light"]) .lado--a{background:linear-gradient(180deg,var(--verde-suave),var(--papel) 78%)}
+  :root:not([data-theme="light"]) .lado--b{background:linear-gradient(180deg,var(--gris-suave),var(--papel) 78%)}
+  :root:not([data-theme="light"]) .ring__tope{background:#000}
+}
+:root[data-theme="dark"]{
+  --papel:#141A17; --fondo:#0D1210; --tinta:#F2F6F3; --grafito:#D3DCD7; --gris:#95A39C;
+  --gris-linea:#27332C; --gris-suave:#1A221E; --verde-suave:#16301A; --verde-linea:#2E5B23;
+  --ambar-suave:#3A2A06; --rojo-suave:#3A1512; --azul-suave:#12283A; --arena:#3E3521;
+  color-scheme:dark;
+}
+</style>
+</head>
+<body>
+
+<header class="tope">
+  <div class="tope__interno">
+    <div class="tope__logos" id="logos"></div>
+    <div class="tope__titulo">
+      <strong id="tituloTorneo">Competencia de SumoBot</strong>
+      <span>Tercera Feria de la Ciencia y la Tecnología</span>
+    </div>
+  </div>
+  <div class="tope__franja"></div>
+</header>
+
+<div class="capa">
+  <nav class="nav" id="nav" aria-label="Secciones"></nav>
+  <main id="app" tabindex="-1"></main>
+</div>
+
+<div class="avisos" id="avisos" aria-live="polite"></div>
+<div id="modales"></div>
+<div class="bot bot--flota" id="botFlota" hidden>
+  <img class="bot__img" alt="TecnoBot" data-marca="tecnobot">
+  <div class="bot__globo" id="botTexto"></div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   Plataforma de gestión — Competencia de SumoBot
+   TecnoAcademia SENA · Universidad de Caldas · III Feria de la Ciencia y la Tecnología
+
+   PRINCIPIO: la plataforma registra y organiza. El juez decide.
+   Ningún resultado se infiere de sensores, tiempos ni criterios automáticos.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- utilidades */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const h = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
+function barajar(a) { const x = a.slice(); for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[x[i], x[j]] = [x[j], x[i]]; } return x; }
+function mmss(ms) { ms = Math.max(0, Math.round(ms / 1000)); const m = Math.floor(ms / 60), s = ms % 60; return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"); }
+function ahora() { return Date.now(); }
+function fechaCorta(ts) { if (!ts) return "—"; const d = new Date(ts); return d.toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }); }
+
+/* ---------------------------------------------------------------- marca / assets
+   Orden de resolución de cada imagen institucional:
+   1. Archivo cargado por el organizador desde "Marca" (se guarda con el torneo).
+   2. /assets/<archivo>.png  ← reemplace el archivo conservando el nombre y se
+      actualiza solo, sin tocar el código.
+   3. Marcador de posición neutro generado en pantalla.
+   NUNCA se dibujan, inventan ni modifican logotipos institucionales.        */
+const MARCAS = {
+  sena: { archivo: "logo_sena.png", titulo: "Logo SENA" },
+  tecnoacademia: { archivo: "logo_tecnoacademia.png", titulo: "Logo TecnoAcademia" },
+  ucaldas: { archivo: "logo_universidad_caldas.png", titulo: "Logo Universidad de Caldas" },
+  feria: { archivo: "logo_feria.png", titulo: "Logo III Feria de la Ciencia y la Tecnología" },
+  tecnobot: { archivo: "tecnobot.png", titulo: "TecnoBot" },
+};
+function placeholderLogo(texto) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90">
+    <rect x="1.5" y="1.5" width="257" height="87" rx="10" fill="#F4F7F5" stroke="#C7D2CB" stroke-width="2" stroke-dasharray="7 6"/>
+    <text x="130" y="41" font-family="Barlow,Arial" font-size="15" font-weight="700" fill="#6E7B75" text-anchor="middle">${texto}</text>
+    <text x="130" y="61" font-family="Barlow,Arial" font-size="12" fill="#98A6A0" text-anchor="middle">espacio reservado</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+function placeholderBot() {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+    <rect x="34" y="14" width="92" height="22" rx="11" fill="#33433B" opacity=".18"/>
+    <rect x="76" y="6" width="8" height="18" rx="4" fill="#33433B"/><circle cx="80" cy="6" r="6" fill="#39A900"/>
+    <rect x="28" y="36" width="104" height="80" rx="20" fill="#FFFFFF" stroke="#33433B" stroke-width="5"/>
+    <rect x="44" y="56" width="72" height="34" rx="12" fill="#12211A"/>
+    <circle cx="64" cy="73" r="7" fill="#39A900"/><circle cx="96" cy="73" r="7" fill="#39A900"/>
+    <path d="M68 100h24" stroke="#33433B" stroke-width="5" stroke-linecap="round"/>
+    <rect x="12" y="58" width="14" height="34" rx="7" fill="#39A900"/><rect x="134" y="58" width="14" height="34" rx="7" fill="#39A900"/>
+    <rect x="52" y="120" width="56" height="16" rx="8" fill="#33433B"/>
+    <text x="80" y="152" font-family="Barlow,Arial" font-size="13" font-weight="700" fill="#6E7B75" text-anchor="middle">TecnoBot</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+function fuenteMarca(clave) {
+  const propia = E.marca && E.marca[clave];
+  if (propia) return propia;
+  return "assets/" + MARCAS[clave].archivo;
+}
+function pintarMarcas(raiz = document) {
+  $$("[data-marca]", raiz).forEach((img) => {
+    const clave = img.dataset.marca;
+    const respaldo = clave === "tecnobot" ? placeholderBot() : placeholderLogo(MARCAS[clave].titulo);
+    img.onerror = () => { img.onerror = null; img.src = respaldo; };
+    img.src = fuenteMarca(clave);
+    if (!img.alt) img.alt = MARCAS[clave].titulo;
+  });
+}
+
+/* ---------------------------------------------------------------- estado */
+const CLAVE_LOCAL = "sumobot.tecnoacademia.v1";
+const MI_ID = uid();
+const FASES = {
+  grupos: "Fase de grupos", r64: "Ronda de 64", r32: "Dieciseisavos", octavos: "Octavos de final",
+  cuartos: "Cuartos de final", semifinal: "Semifinal", final: "Final", tercer: "Tercer puesto",
+};
+const ORDEN_FASE = ["grupos", "r64", "r32", "octavos", "cuartos", "semifinal", "tercer", "final"];
+const ESTADOS = { pendiente: "Pendiente", proximo: "Próximo", curso: "En curso", pausado: "Pausado", finalizado: "Finalizado", reprogramado: "Reprogramado" };
+
+function estadoInicial() {
+  return {
+    version: 1, rev: 0, actualizado: ahora(), autor: MI_ID,
+    torneo: {
+      nombre: "Competencia de SumoBot",
+      sede: "TecnoAcademia SENA · Universidad de Caldas",
+      duracionCombate: 180000,
+      duracionDescanso: 30000,
+      rondasPorCombate: 3,
+      modo: null,            // 'eliminacion' | 'grupos'
+      grupos: { cantidad: 4, clasifican: 2 },
+      generado: false,
+      eliminatoriaDesdeGrupos: false,
+    },
+    marca: {},
+    equipos: [],
+    combates: [],
+    combateActual: null,
+    contadorCombate: 0,
+    bitacora: [],
+  };
+}
+let E = estadoInicial();
+let vista = "panel";
+let filtroEquipos = "";
+let filtroCombates = "todos";
+
+/* ---------------------------------------------------------------- persistencia */
+let guardarDbTimer = null, dbRef = null, ignorarSnap = false;
+function guardar(registro) {
+  E.rev = (E.rev || 0) + 1;
+  E.actualizado = ahora();
+  E.autor = MI_ID;
+  if (registro) {
+    E.bitacora.unshift({ ts: ahora(), texto: registro });
+    if (E.bitacora.length > 300) E.bitacora.length = 300;
+  }
+  try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(E)); } catch (e) { avisar("No se pudo guardar localmente. Libere espacio del navegador.", "mal"); }
+  if (dbRef) {
+    clearTimeout(guardarDbTimer);
+    guardarDbTimer = setTimeout(async () => {
+      try { ignorarSnap = true; await dbRef.set(JSON.parse(JSON.stringify(E))); setTimeout(() => (ignorarSnap = false), 400); }
+      catch (e) { ignorarSnap = false; }
+    }, 700);
+  }
+}
+function cargarLocal() {
+  try {
+    const crudo = localStorage.getItem(CLAVE_LOCAL);
+    if (!crudo) return false;
+    const d = JSON.parse(crudo);
+    if (d && d.equipos) { E = Object.assign(estadoInicial(), d); E.torneo = Object.assign(estadoInicial().torneo, d.torneo || {}); return true; }
+  } catch (e) { }
+  return false;
+}
+async function esperarClaude() {
+  for (let i = 0; i < 40; i++) { if (window.claude && window.claude.use) return window.claude; await dormir(250); }
+  return null;
+}
+let caps = {};
+async function cap(nombre) {
+  if (!(nombre in caps)) {
+    const c = window.claude && window.claude.use ? window.claude.use(nombre).catch(() => null) : Promise.resolve(null);
+    caps[nombre] = c;
+  }
+  return caps[nombre];
+}
+async function iniciarSincronia() {
+  const c = await esperarClaude();
+  if (!c) { marcarSync("Guardado en este navegador"); return; }
+  const db = await cap("db");
+  if (!db) { marcarSync("Guardado en este navegador"); return; }
+  try {
+    dbRef = db.doc("torneo/estado");
+    const snap = await dbRef.get();
+    if (snap.exists) {
+      const remoto = snap.data();
+      if (remoto && remoto.equipos && (remoto.rev || 0) > (E.rev || 0)) {
+        E = Object.assign(estadoInicial(), remoto);
+        E.torneo = Object.assign(estadoInicial().torneo, remoto.torneo || {});
+        try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(E)); } catch (e) { }
+        render();
+        avisar("Se recuperó el torneo guardado en el servidor");
+      } else if ((E.rev || 0) > 0) { ignorarSnap = true; await dbRef.set(JSON.parse(JSON.stringify(E))); setTimeout(() => (ignorarSnap = false), 400); }
+    } else if ((E.rev || 0) > 0) { ignorarSnap = true; await dbRef.set(JSON.parse(JSON.stringify(E))); setTimeout(() => (ignorarSnap = false), 400); }
+    dbRef.onSnapshot((s) => {
+      if (ignorarSnap || !s.exists) return;
+      const d = s.data();
+      if (!d || d.autor === MI_ID) return;
+      if ((d.rev || 0) <= (E.rev || 0)) return;
+      E = Object.assign(estadoInicial(), d);
+      E.torneo = Object.assign(estadoInicial().torneo, d.torneo || {});
+      try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(E)); } catch (e) { }
+      render();
+    }, () => { });
+    marcarSync("Guardado en este equipo y en el servidor");
+  } catch (e) { marcarSync("Guardado en este navegador"); }
+}
+let textoSync = "Guardado en este navegador";
+function marcarSync(t) { textoSync = t; const n = $("#estadoSync"); if (n) n.textContent = t; }
+
+/* ---------------------------------------------------------------- avisos / modales */
+function avisar(texto, tipo) {
+  const n = document.createElement("div");
+  n.className = "aviso" + (tipo === "ok" ? " aviso--ok" : tipo === "mal" ? " aviso--mal" : "");
+  n.textContent = texto;
+  $("#avisos").appendChild(n);
+  setTimeout(() => { n.style.opacity = "0"; n.style.transition = "opacity .3s"; setTimeout(() => n.remove(), 320); }, 2800);
+}
+let botTimer = null;
+function bot(texto, ms = 4200) {
+  const caja = $("#botFlota");
+  $("#botTexto").innerHTML = texto;
+  caja.hidden = false;
+  pintarMarcas(caja);
+  clearTimeout(botTimer);
+  botTimer = setTimeout(() => { caja.hidden = true; }, ms);
+}
+function cerrarModal() { $("#modales").innerHTML = ""; document.body.style.overflow = ""; }
+function modal({ titulo, cuerpo, pie, ancho }) {
+  const f = document.createElement("div");
+  f.className = "modal-fondo";
+  f.innerHTML = `<div class="modal" role="dialog" aria-modal="true" ${ancho ? `style="width:min(${ancho},100%)"` : ""}>
+      <div class="modal__t"><h2>${titulo}</h2>
+        <button class="b b--xs b--linea" data-cerrar style="margin-left:auto">Cerrar</button></div>
+      <div class="modal__c">${cuerpo}</div>
+      ${pie ? `<div class="modal__p">${pie}</div>` : ""}
+    </div>`;
+  f.addEventListener("click", (e) => { if (e.target === f || e.target.hasAttribute("data-cerrar")) cerrarModal(); });
+  $("#modales").innerHTML = "";
+  $("#modales").appendChild(f);
+  document.body.style.overflow = "hidden";
+  pintarMarcas(f);
+  const primero = f.querySelector("input,select,textarea,button:not([data-cerrar])");
+  if (primero) setTimeout(() => primero.focus(), 40);
+  return f;
+}
+function confirmar({ titulo, mensaje, confirmar: txt = "Confirmar", peligro = false, alConfirmar }) {
+  const f = modal({
+    titulo,
+    cuerpo: `<div class="bot"><img class="bot__img" data-marca="tecnobot" alt=""><div class="bot__globo">${mensaje}</div></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button>
+          <button class="b ${peligro ? "b--peligro" : "b--p"}" id="btnConfirmar">${h(txt)}</button>`,
+  });
+  $("#btnConfirmar", f).addEventListener("click", () => { cerrarModal(); alConfirmar(); });
+}
+
+/* ---------------------------------------------------------------- consultas */
+const equipo = (id) => E.equipos.find((e) => e.id === id) || null;
+const nombreEquipo = (id) => (id ? (equipo(id)?.nombre || "Equipo eliminado") : null);
+const combate = (id) => E.combates.find((c) => c.id === id) || null;
+function combatesOrdenados() { return E.combates.slice().sort((a, b) => a.orden - b.orden); }
+function combatesListos() { return combatesOrdenados().filter((c) => c.equipoA && c.equipoB && ["pendiente", "proximo", "pausado", "reprogramado"].includes(c.estado)); }
+function proximoCombate() { const l = combatesListos().filter((c) => c.id !== E.combateActual); return l[0] || null; }
+
+function estadisticas() {
+  const m = new Map();
+  E.equipos.forEach((e) => m.set(e.id, { equipo: e, pj: 0, v: 0, d: 0, pts: 0, rondasG: 0, rondasP: 0, eliminado: false, combates: [] }));
+  combatesOrdenados().forEach((c) => {
+    [c.equipoA, c.equipoB].forEach((id) => { const s = m.get(id); if (s) s.combates.push(c); });
+    if (c.estado !== "finalizado" || !c.ganador) return;
+    const perdedor = c.ganador === c.equipoA ? c.equipoB : c.equipoA;
+    const g = m.get(c.ganador), p = m.get(perdedor);
+    if (g) { g.pj++; g.v++; g.pts += 3; g.rondasG += c.ganador === c.equipoA ? c.rondas.a : c.rondas.b; }
+    if (p) {
+      p.pj++; p.d++;
+      p.rondasG += c.ganador === c.equipoA ? c.rondas.b : c.rondas.a;
+      if (c.fase !== "grupos") p.eliminado = true;
+    }
+  });
+  return m;
+}
+function tablaGeneral() {
+  const m = estadisticas();
+  return Array.from(m.values()).sort((a, b) =>
+    b.pts - a.pts || b.v - a.v || a.d - b.d || (a.equipo.numero || "").localeCompare(b.equipo.numero || "", "es", { numeric: true })
+  );
+}
+function tablaGrupo(g) {
+  const m = estadisticas();
+  return E.equipos.filter((e) => e.grupo === g).map((e) => m.get(e.id))
+    .sort((a, b) => b.pts - a.pts || b.v - a.v || a.d - b.d || (a.equipo.numero || "").localeCompare(b.equipo.numero || "", "es", { numeric: true }));
+}
+
+/* ---------------------------------------------------------------- reloj por combate */
+function restante(c) {
+  if (!c) return 0;
+  const base = c.reloj?.restante ?? E.torneo.duracionCombate;
+  if (c.reloj?.desde) return Math.max(0, base - (ahora() - c.reloj.desde));
+  return Math.max(0, base);
+}
+function relojCorriendo(c) { return !!(c && c.reloj && c.reloj.desde); }
+function detenerReloj(c) {
+  if (!c.reloj) c.reloj = { restante: E.torneo.duracionCombate, desde: null };
+  if (c.reloj.desde) { c.reloj.restante = restante(c); c.reloj.desde = null; }
+}
+
+/* ---------------------------------------------------------------- torneo: creación */
+function nuevoCombate(datos) {
+  E.contadorCombate = (E.contadorCombate || 0) + 1;
+  return Object.assign({
+    id: uid(), numero: E.contadorCombate, orden: E.combates.length + 1,
+    fase: "grupos", grupo: null, equipoA: null, equipoB: null,
+    estado: "pendiente", ganador: null, observaciones: "",
+    rondas: { a: 0, b: 0 }, rondaActual: 1,
+    reloj: { restante: E.torneo.duracionCombate, desde: null },
+    siguiente: null, siguientePerdedor: null, historial: [],
+  }, datos);
+}
+function faseDeRonda(numPartidos) {
+  const equipos = numPartidos * 2;
+  if (equipos >= 64) return "r64";
+  if (equipos === 32) return "r32";
+  if (equipos === 16) return "octavos";
+  if (equipos === 8) return "cuartos";
+  if (equipos === 4) return "semifinal";
+  return "final";
+}
+function construirEliminatoria(ids) {
+  if (ids.length < 2) return [];
+  let tam = 1; while (tam < ids.length) tam *= 2;
+  const numPartidos = tam / 2;
+  const byes = tam - ids.length;                       // siempre menor que numPartidos
+  const conBye = new Set(barajar(Array.from({ length: numPartidos }, (_, i) => i)).slice(0, byes));
+  const mezcla = barajar(ids);
+  const creados = [], rondas = [];
+  let k = 0, fila = [];
+  for (let i = 0; i < numPartidos; i++) {              // primera ronda: ningún cruce queda vacío
+    const a = mezcla[k++] || null;
+    const b = conBye.has(i) ? null : (mezcla[k++] || null);
+    const c = nuevoCombate({ fase: faseDeRonda(numPartidos), equipoA: a, equipoB: b });
+    E.combates.push(c); fila.push(c); creados.push(c);
+  }
+  rondas.push(fila);
+  let n = numPartidos;
+  while (n > 1) {
+    n = n / 2; fila = [];
+    for (let i = 0; i < n; i++) {
+      const c = nuevoCombate({ fase: faseDeRonda(n) });
+      E.combates.push(c); fila.push(c); creados.push(c);
+    }
+    rondas.push(fila);
+  }
+  for (let r = 0; r < rondas.length - 1; r++) {
+    rondas[r].forEach((c, i) => { c.siguiente = { id: rondas[r + 1][Math.floor(i / 2)].id, lado: i % 2 === 0 ? "A" : "B" }; });
+  }
+  const semis = rondas.find((f) => f.length === 2);
+  if (semis) {
+    const tercero = nuevoCombate({ fase: "tercer", equipoA: null, equipoB: null });
+    E.combates.push(tercero); creados.push(tercero);
+    semis[0].siguientePerdedor = { id: tercero.id, lado: "A" };
+    semis[1].siguientePerdedor = { id: tercero.id, lado: "B" };
+  }
+  // BYE: si un cruce de primera ronda tiene un solo equipo, avanza sin combate.
+  rondas[0].forEach((c) => {
+    if (c.equipoA && !c.equipoB) { c.estado = "finalizado"; c.ganador = c.equipoA; c.observaciones = "Avanza por BYE (sin rival en el sorteo)"; propagar(c); }
+    else if (!c.equipoA && c.equipoB) { c.estado = "finalizado"; c.ganador = c.equipoB; c.observaciones = "Avanza por BYE (sin rival en el sorteo)"; propagar(c); }
+  });
+  renumerar();
+  return creados;
+}
+function rondaRobin(ids) {
+  const l = ids.slice();
+  if (l.length % 2) l.push(null);
+  const n = l.length, jornadas = [];
+  for (let j = 0; j < n - 1; j++) {
+    const par = [];
+    for (let i = 0; i < n / 2; i++) { const a = l[i], b = l[n - 1 - i]; if (a && b) par.push([a, b]); }
+    jornadas.push(par);
+    l.splice(1, 0, l.pop());
+  }
+  return jornadas;
+}
+function renumerar() {
+  const ord = ["grupos", "r64", "r32", "octavos", "cuartos", "semifinal", "tercer", "final"];
+  E.combates.sort((a, b) => ord.indexOf(a.fase) - ord.indexOf(b.fase) || a.orden - b.orden);
+  E.combates.forEach((c, i) => { c.orden = i + 1; c.numero = i + 1; });
+  E.contadorCombate = E.combates.length;
+}
+function generarSorteo(modo, opciones) {
+  const ids = E.equipos.map((e) => e.id);
+  if (ids.length < 2) { avisar("Registre al menos dos equipos", "mal"); return; }
+  E.combates = []; E.contadorCombate = 0; E.combateActual = null;
+  E.equipos.forEach((e) => (e.grupo = null));
+  E.torneo.modo = modo;
+  E.torneo.eliminatoriaDesdeGrupos = false;
+
+  if (modo === "eliminacion") {
+    construirEliminatoria(ids);
+    E.torneo.generado = true;
+    guardar(`Sorteo de eliminación directa con ${ids.length} equipos`);
+    bot("<b>¡Sorteo listo!</b> Las llaves quedaron armadas. Revise la sección Llaves antes de iniciar.");
+  } else {
+    const cant = Math.max(1, Math.min(opciones.cantidad, Math.floor(ids.length / 2)));
+    E.torneo.grupos = { cantidad: cant, clasifican: Math.max(1, opciones.clasifican) };
+    const mezcla = barajar(ids);
+    const letras = "ABCDEFGH".slice(0, cant).split("");
+    mezcla.forEach((id, i) => { equipo(id).grupo = letras[i % cant]; });
+    letras.forEach((g) => {
+      const delGrupo = E.equipos.filter((e) => e.grupo === g).map((e) => e.id);
+      rondaRobin(delGrupo).forEach((jornada) => jornada.forEach(([a, b]) => {
+        E.combates.push(nuevoCombate({ fase: "grupos", grupo: g, equipoA: a, equipoB: b }));
+      }));
+    });
+    renumerar();
+    E.torneo.generado = true;
+    guardar(`Sorteo de fase de grupos: ${cant} grupos, clasifican ${opciones.clasifican} por grupo`);
+    bot("<b>¡Grupos sorteados!</b> Cuando termine la fase de grupos podrá generar la eliminatoria con un botón.");
+  }
+  vista = "llaves"; render();
+}
+function generarEliminatoriaDesdeGrupos() {
+  const letras = Array.from(new Set(E.equipos.map((e) => e.grupo).filter(Boolean))).sort();
+  const k = E.torneo.grupos.clasifican;
+  const clasificados = [];
+  letras.forEach((g) => { tablaGrupo(g).slice(0, k).forEach((f, i) => clasificados.push({ id: f.equipo.id, grupo: g, puesto: i + 1 })); });
+  if (clasificados.length < 2) { avisar("No hay suficientes equipos clasificados", "mal"); return; }
+  E.combates = E.combates.filter((c) => c.fase === "grupos");
+  construirEliminatoria(clasificados.map((c) => c.id));
+  E.torneo.eliminatoriaDesdeGrupos = true;
+  guardar(`Eliminatoria generada con ${clasificados.length} equipos clasificados`);
+  bot("<b>¡Fase final en marcha!</b> Ya están sorteados los cruces de eliminación directa.");
+  vista = "llaves"; render();
+}
+
+/* ---------------------------------------------------------------- resultados */
+function ponerEnRanura(idCombate, lado, idEquipo) {
+  const c = combate(idCombate); if (!c) return;
+  const campo = lado === "A" ? "equipoA" : "equipoB";
+  if (c[campo] === idEquipo) return;
+  c[campo] = idEquipo;
+  if (c.estado === "finalizado" && c.ganador && c.ganador !== c.equipoA && c.ganador !== c.equipoB) {
+    c.estado = "pendiente"; c.ganador = null;
+  }
+  if (c.equipoA && c.equipoB && c.estado === "pendiente") c.estado = "proximo";
+}
+function propagar(c) {
+  if (!c.ganador) return;
+  const perdedor = c.ganador === c.equipoA ? c.equipoB : c.equipoA;
+  if (c.siguiente) ponerEnRanura(c.siguiente.id, c.siguiente.lado, c.ganador);
+  if (c.siguientePerdedor && perdedor) ponerEnRanura(c.siguientePerdedor.id, c.siguientePerdedor.lado, perdedor);
+}
+function limpiarDescendientes(c) {
+  const quitar = (ref) => {
+    if (!ref) return;
+    const d = combate(ref.id); if (!d) return;
+    const campo = ref.lado === "A" ? "equipoA" : "equipoB";
+    if (d[campo]) {
+      const habiaGanador = d.ganador;
+      d[campo] = null;
+      if (habiaGanador) { d.ganador = null; d.rondas = { a: 0, b: 0 }; d.rondaActual = 1; limpiarDescendientes(d); }
+      d.estado = "pendiente";
+      d.reloj = { restante: E.torneo.duracionCombate, desde: null };
+    }
+  };
+  quitar(c.siguiente); quitar(c.siguientePerdedor);
+}
+function registrarGanador(idCombate, idGanador, motivo) {
+  const c = combate(idCombate); if (!c || !idGanador) return;
+  detenerReloj(c);
+  c.ganador = idGanador;
+  c.estado = "finalizado";
+  c.finalizado = ahora();
+  c.historial.push({ ts: ahora(), texto: `Juez registra ganador: ${nombreEquipo(idGanador)}${motivo ? " — " + motivo : ""}` });
+  propagar(c);
+  const eq = equipo(idGanador);
+  const sig = proximoCombate();
+  E.combateActual = sig ? sig.id : null;
+  guardar(`Combate ${c.numero}: gana ${eq ? eq.nombre : "—"}`);
+  render();
+  if (sig) bot(`<b>¡Resultado registrado!</b> Gana ${h(eq ? eq.nombre : "")}. Siguiente: combate ${sig.numero} — ${h(nombreEquipo(sig.equipoA) || "por definir")} vs ${h(nombreEquipo(sig.equipoB) || "por definir")}.`, 6000);
+  else bot(`<b>¡Resultado registrado!</b> Gana ${h(eq ? eq.nombre : "")}. No quedan combates listos por disputar.`, 6000);
+  avisar("Resultado guardado", "ok");
+}
+function reabrirCombate(idCombate) {
+  const c = combate(idCombate); if (!c) return;
+  const teniaGanador = c.ganador;
+  limpiarDescendientes(c);
+  c.ganador = null;
+  c.estado = c.equipoA && c.equipoB ? "proximo" : "pendiente";
+  c.historial.push({ ts: ahora(), texto: `Resultado reabierto para corrección (antes: ${nombreEquipo(teniaGanador) || "sin ganador"})` });
+  guardar(`Combate ${c.numero}: resultado reabierto para corrección`);
+  render();
+  avisar("Combate reabierto. El resultado anterior quedó registrado en la bitácora.", "ok");
+}
+
+/* ---------------------------------------------------------------- render principal */
+const SECCIONES = [
+  { id: "panel", t: "Panel" }, { id: "participantes", t: "Participantes" }, { id: "llaves", t: "Llaves" },
+  { id: "combate", t: "Combate en vivo" }, { id: "combates", t: "Combates" },
+  { id: "clasificacion", t: "Clasificación" }, { id: "exportar", t: "Exportar" }, { id: "marca", t: "Marca y ajustes" },
+];
+function pintarNav() {
+  const pend = combatesListos().length;
+  $("#nav").innerHTML = SECCIONES.map((s, i) =>
+    (i === 6 ? '<div class="nav__sep"></div>' : "") +
+    `<button class="nav__b" data-ir="${s.id}" aria-current="${vista === s.id}">${s.t}
+      ${s.id === "combates" && pend ? `<span class="pt">${pend}</span>` : ""}</button>`
+  ).join("");
+}
+function pintarLogos() {
+  $("#logos").innerHTML = ["sena", "tecnoacademia", "ucaldas", "feria"]
+    .map((k) => `<img class="logo" data-marca="${k}" alt="${MARCAS[k].titulo}">`).join("");
+  pintarMarcas($("#logos"));
+  $("#tituloTorneo").textContent = E.torneo.nombre || "Competencia de SumoBot";
+  document.title = (E.torneo.nombre || "SumoBot") + " · TecnoAcademia SENA";
+}
+function render() {
+  pintarLogos(); pintarNav();
+  const c = { panel: vPanel, participantes: vParticipantes, llaves: vLlaves, combate: vCombate, combates: vCombates, clasificacion: vClasificacion, exportar: vExportar, marca: vMarca }[vista] || vPanel;
+  $("#app").innerHTML = c();
+  pintarMarcas($("#app"));
+  const s = $("#estadoSync"); if (s) s.textContent = textoSync;
+}
+function ir(v) { vista = v; render(); $("#app").scrollIntoView({ block: "start", behavior: "smooth" }); }
+
+/* ---------------------------------------------------------------- vista: panel */
+function vPanel() {
+  const total = E.equipos.length;
+  const fin = E.combates.filter((c) => c.estado === "finalizado").length;
+  const pend = E.combates.filter((c) => c.estado !== "finalizado").length;
+  const actual = combate(E.combateActual) || combatesListos()[0] || null;
+  const sig = proximoCombate();
+  if (!total) return bienvenida();
+
+  return `
+  <div class="pag__tope"><div><h1>Panel de control</h1><p>${h(E.torneo.nombre)} · ${h(E.torneo.sede)}</p></div>
+    <div class="pag__acc">
+      ${E.torneo.generado ? `<button class="b b--linea" data-ir="combates">Ver todos los combates</button>` : ""}
+      <button class="b b--p" data-ir="combate">Ir a la pantalla de combate</button>
+    </div></div>
+
+  <div class="rejilla r4" style="margin-bottom:18px">
+    ${tarjetaDato(total, "Equipos registrados")}
+    ${tarjetaDato(fin, "Combates realizados")}
+    ${tarjetaDato(pend, "Combates pendientes")}
+    ${tarjetaDato(E.torneo.modo === "grupos" ? E.torneo.grupos.cantidad : "—", E.torneo.modo === "grupos" ? "Grupos en juego" : "Eliminación directa", true)}
+  </div>
+
+  ${actual ? tarjetaCombateActual(actual) : `<div class="tarjeta"><div class="tarjeta__cuerpo"><div class="bot">
+      <img class="bot__img" data-marca="tecnobot" alt=""><div class="bot__globo">
+      ${E.torneo.generado ? "No hay combates listos para disputar. Revise la sección Combates o genere la siguiente fase." : "Todavía no se ha generado el sorteo. Vaya a <b>Llaves</b> para armar la competencia."}</div></div></div></div>`}
+
+  <div class="rejilla r2" style="margin-top:18px">
+    <div class="tarjeta">
+      <div class="tarjeta__tope"><h2>Próximos combates</h2>
+        <button class="b b--xs b--linea" data-ir="combates" style="margin-left:auto">Ver todos</button></div>
+      <div class="tarjeta__cuerpo">${listaCortaCombates(6)}</div>
+    </div>
+    <div class="tarjeta">
+      <div class="tarjeta__tope"><h2>Actividad reciente</h2></div>
+      <div class="tarjeta__cuerpo">
+        ${E.bitacora.length ? `<div style="display:flex;flex-direction:column;gap:9px;max-height:330px;overflow:auto">
+          ${E.bitacora.slice(0, 14).map((b) => `<div style="display:flex;gap:10px;font-size:.9rem">
+            <span class="num" style="color:var(--gris);flex:none">${fechaCorta(b.ts)}</span><span>${h(b.texto)}</span></div>`).join("")}
+        </div>` : `<p style="color:var(--gris)">Aquí aparecerá cada acción registrada durante la competencia.</p>`}
+        <div class="estado-sync" style="padding-left:0"><span class="punto" style="color:var(--verde)"></span><span id="estadoSync">${h(textoSync)}</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+function tarjetaDato(valor, rotulo, acento) {
+  return `<div class="tarjeta dato ${acento ? "dato--acento" : ""}"><span class="cifra num">${h(valor)}</span><span class="rotulo">${h(rotulo)}</span></div>`;
+}
+function bienvenida() {
+  return `<div class="tarjeta"><div class="tarjeta__cuerpo vacio">
+    <div class="bot">
+      <img class="bot__img" data-marca="tecnobot" alt="">
+      <div class="bot__globo" style="text-align:left">
+        <b>Hola, soy TecnoBot.</b> Vamos a preparar la competencia de SumoBot en tres pasos:
+        registrar los equipos, generar el sorteo y arrancar los combates.
+        Recuerde: yo organizo y registro, <b>el juez decide</b>.
+      </div>
+    </div>
+    <div class="fila-b" style="justify-content:center;margin-top:22px">
+      <button class="b b--p b--g" data-accion="nuevoEquipo">Registrar el primer equipo</button>
+      <button class="b b--linea b--g" data-accion="importar">Importar participantes</button>
+    </div>
+  </div></div>`;
+}
+function tarjetaCombateActual(c) {
+  const a = equipo(c.equipoA), b = equipo(c.equipoB);
+  return `<div class="ring">
+    <div class="ring__tope">
+      <span class="id">Combate ${c.numero}</span>
+      <span class="fase">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""}</span>
+      <span class="et et--${c.estado}"><span class="punto"></span>${ESTADOS[c.estado]}</span>
+      <div class="der"><button class="b b--xs b--linea" data-ir="combate" style="background:#ffffff22;color:#fff;border-color:#ffffff33">Abrir pantalla completa</button></div>
+    </div>
+    <div class="duelo">
+      <div class="lado lado--a"><span class="lado__rot">Equipo A</span>
+        <span class="lado__nombre">${h(a?.nombre || "Por definir")}</span>
+        <span class="lado__meta">${h(a?.institucion || "")}</span>
+        ${a?.robot ? `<span class="lado__robot"><i>Robot</i> ${h(a.robot)}</span>` : ""}</div>
+      <div class="centro">
+        <span class="vs">VS</span>
+        <span class="reloj js-reloj" data-c="${c.id}">${mmss(restante(c))}</span>
+        <span class="rondas__t">Ronda ${c.rondaActual} de ${E.torneo.rondasPorCombate}</span>
+      </div>
+      <div class="lado lado--b"><span class="lado__rot">Equipo B</span>
+        <span class="lado__nombre">${h(b?.nombre || "Por definir")}</span>
+        <span class="lado__meta">${h(b?.institucion || "")}</span>
+        ${b?.robot ? `<span class="lado__robot"><i>Robot</i> ${h(b.robot)}</span>` : ""}</div>
+    </div>
+    <div class="pie-ring">
+      <button class="b b--p" data-ir="combate">Operar este combate</button>
+      <button class="b b--linea" data-accion="cambiarCombate">Cambiar de combate</button>
+    </div>
+  </div>`;
+}
+function listaCortaCombates(n) {
+  const l = combatesListos().slice(0, n);
+  if (!l.length) return `<p style="color:var(--gris)">No hay combates en espera.</p>`;
+  return `<div class="lista-comb">${l.map((c) => `
+    <div class="comb ${c.id === E.combateActual ? "comb--activo" : ""}">
+      <span class="comb__n num">${c.numero}</span>
+      <div class="comb__e"><b>${h(nombreEquipo(c.equipoA) || "Por definir")}</b> <span style="color:var(--gris)">vs</span> <b>${h(nombreEquipo(c.equipoB) || "Por definir")}</b>
+        <div style="font-size:.82rem;color:var(--gris)">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""}</div></div>
+      <div class="comb__acc"><button class="b b--xs b--p" data-accion="activar" data-id="${c.id}">Operar</button></div>
+    </div>`).join("")}</div>`;
+}
+
+/* ---------------------------------------------------------------- vista: participantes */
+function vParticipantes() {
+  const q = filtroEquipos.trim().toLowerCase();
+  const lista = E.equipos.filter((e) => !q || [e.numero, e.nombre, e.institucion, e.robot, (e.integrantes || []).join(" ")].join(" ").toLowerCase().includes(q));
+  const est = estadisticas();
+  return `
+  <div class="pag__tope"><div><h1>Participantes</h1><p>${E.equipos.length} equipo${E.equipos.length === 1 ? "" : "s"} registrado${E.equipos.length === 1 ? "" : "s"}</p></div>
+    <div class="pag__acc">
+      <button class="b b--linea" data-accion="importar">Importar participantes</button>
+      <button class="b b--p" data-accion="nuevoEquipo">Registrar equipo</button>
+    </div></div>
+
+  <div class="tarjeta">
+    <div class="tarjeta__tope">
+      <input id="buscaEquipo" type="search" placeholder="Buscar por equipo, institución, robot o integrante" value="${h(filtroEquipos)}" style="max-width:420px">
+      ${E.equipos.length ? `<button class="b b--xs b--peligro" data-accion="borrarTodosEquipos" style="margin-left:auto">Vaciar listado</button>` : ""}
+    </div>
+    ${lista.length ? `<div class="tabla-cont"><table>
+      <thead><tr><th>N.º</th><th>Equipo</th><th>Institución</th><th>Robot</th><th>Integrantes</th><th>Grupo</th><th>PJ</th><th>V</th><th>D</th><th></th></tr></thead>
+      <tbody>${lista.map((e) => { const s = est.get(e.id); return `<tr>
+        <td class="num"><b>${h(e.numero)}</b></td>
+        <td><button class="b b--xs b--linea" data-accion="ficha" data-id="${e.id}">${h(e.nombre)}</button></td>
+        <td>${h(e.institucion || "—")}</td>
+        <td>${h(e.robot || "—")}</td>
+        <td style="max-width:260px">${(e.integrantes || []).length ? (e.integrantes || []).map((i) => `<span class="chip">${h(i)}</span>`).join("") : "—"}</td>
+        <td>${e.grupo ? `<span class="et">${h(e.grupo)}</span>` : "—"}</td>
+        <td class="num">${s.pj}</td><td class="num">${s.v}</td><td class="num">${s.d}</td>
+        <td style="white-space:nowrap">
+          <button class="b b--xs b--linea" data-accion="editarEquipo" data-id="${e.id}">Editar</button>
+          <button class="b b--xs b--peligro" data-accion="borrarEquipo" data-id="${e.id}">Eliminar</button></td>
+      </tr>`; }).join("")}</tbody></table></div>`
+      : `<div class="tarjeta__cuerpo vacio"><div class="bot"><img class="bot__img" data-marca="tecnobot" alt="">
+          <div class="bot__globo">${E.equipos.length ? "Ningún equipo coincide con la búsqueda." : "Aún no hay equipos. Regístrelos uno a uno o impórtelos desde un archivo CSV."}</div></div></div>`}
+  </div>`;
+}
+function formEquipo(e) {
+  const datos = e || { numero: String(E.equipos.length + 1).padStart(2, "0"), nombre: "", institucion: "", robot: "", integrantes: [] };
+  return modal({
+    titulo: e ? "Editar equipo" : "Registrar equipo",
+    cuerpo: `
+      <div class="rejilla r2">
+        <div class="campo"><label for="fNum">Número de equipo</label><input id="fNum" value="${h(datos.numero)}"></div>
+        <div class="campo"><label for="fNom">Nombre del equipo</label><input id="fNom" value="${h(datos.nombre)}" placeholder="Ej: Titanes del Sumo"></div>
+      </div>
+      <div class="rejilla r2">
+        <div class="campo"><label for="fIns">Institución educativa</label><input id="fIns" value="${h(datos.institucion)}"></div>
+        <div class="campo"><label for="fRob">Nombre del robot</label><input id="fRob" value="${h(datos.robot)}"></div>
+      </div>
+      <div class="campo"><label for="fInt">Integrantes</label>
+        <textarea id="fInt" rows="3" placeholder="Un nombre por línea, o separados por punto y coma">${h((datos.integrantes || []).join("\n"))}</textarea>
+        <div class="pista">Separe los nombres con salto de línea, punto y coma o coma.</div></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="fGuardar">${e ? "Guardar cambios" : "Registrar equipo"}</button>`,
+  });
+}
+function partirIntegrantes(t) { return String(t || "").split(/[\n;,]/).map((s) => s.trim()).filter(Boolean); }
+
+/* ---------------------------------------------------------------- importación */
+function detectarSeparador(txt) {
+  const l = txt.split(/\r?\n/).find((x) => x.trim()) || "";
+  const cand = [",", ";", "\t", "|"];
+  return cand.sort((a, b) => l.split(b).length - l.split(a).length)[0];
+}
+function parsearCSV(txt, sep) {
+  const filas = []; let fila = [], campo = "", comillas = false;
+  txt = txt.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  for (let i = 0; i < txt.length; i++) {
+    const ch = txt[i];
+    if (comillas) {
+      if (ch === '"') { if (txt[i + 1] === '"') { campo += '"'; i++; } else comillas = false; }
+      else campo += ch;
+    } else if (ch === '"') comillas = true;
+    else if (ch === sep) { fila.push(campo); campo = ""; }
+    else if (ch === "\n") { fila.push(campo); filas.push(fila); fila = []; campo = ""; }
+    else campo += ch;
+  }
+  if (campo || fila.length) { fila.push(campo); filas.push(fila); }
+  return filas.map((f) => f.map((c) => c.trim())).filter((f) => f.some((c) => c !== ""));
+}
+const CAMPOS_IMP = [
+  { v: "ignorar", t: "No importar" }, { v: "numero", t: "Número de equipo" }, { v: "nombre", t: "Nombre del equipo" },
+  { v: "institucion", t: "Institución" }, { v: "robot", t: "Nombre del robot" }, { v: "integrantes", t: "Integrantes" },
+];
+function adivinarCampo(cab, idx) {
+  const t = String(cab || "").toLowerCase();
+  if (/n[uú]m|^n\.?[º°]?$|^#$|equipo\s*n/.test(t)) return "numero";
+  if (/integr|particip|estudiant|miembro/.test(t)) return "integrantes";
+  if (/instituc|colegio|sede|centro|entidad/.test(t)) return "institucion";
+  if (/robot/.test(t)) return "robot";
+  if (/equipo|nombre/.test(t)) return "nombre";
+  return ["numero", "nombre", "institucion", "robot", "integrantes"][idx] || "ignorar";
+}
+function abrirImportador() {
+  modal({
+    ancho: "760px", titulo: "Importar participantes",
+    cuerpo: `
+      <div class="bot" style="margin-bottom:16px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">Cargue un archivo CSV o pegue el listado. Después le muestro una vista previa para que confirme a qué corresponde cada columna.</div></div>
+      <div class="campo"><label for="impArchivo">Archivo CSV</label><input id="impArchivo" type="file" accept=".csv,.txt,text/csv"></div>
+      <div class="campo"><label for="impTexto">O pegue el listado aquí</label>
+        <textarea id="impTexto" rows="7" placeholder="Equipo,Nombre,Institución,Robot,Integrantes
+01,Titanes,Colegio A,Rayo,&quot;Juan Pérez; Ana Gómez&quot;
+02,Vulcano,Colegio B,Flash,&quot;Carlos López; María Ruiz&quot;"></textarea>
+        <div class="pista">Acepta separadores de coma, punto y coma o tabulación. Los integrantes pueden ir entre comillas separados por punto y coma.</div></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="impSeguir">Continuar</button>`,
+  });
+  $("#impArchivo").addEventListener("change", (ev) => {
+    const f = ev.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { $("#impTexto").value = r.result; avisar("Archivo leído: " + f.name); };
+    r.readAsText(f, "utf-8");
+  });
+  $("#impSeguir").addEventListener("click", () => {
+    const txt = $("#impTexto").value.trim();
+    if (!txt) { avisar("No hay datos para importar", "mal"); return; }
+    const sep = detectarSeparador(txt);
+    const filas = parsearCSV(txt, sep);
+    if (!filas.length) { avisar("No se pudo leer el contenido", "mal"); return; }
+    previaImportacion(filas);
+  });
+}
+function previaImportacion(filas) {
+  const primera = filas[0];
+  const pareceCabecera = primera.some((c) => /equipo|nombre|instituc|robot|integr|n[uú]m|colegio/i.test(c));
+  const cabecera = pareceCabecera ? primera : primera.map((_, i) => "Columna " + (i + 1));
+  const datos = pareceCabecera ? filas.slice(1) : filas;
+  const mapa = cabecera.map((c, i) => adivinarCampo(pareceCabecera ? c : "", i));
+  const enc = cabecera.map((c) => String(c).toLowerCase().trim());
+  if (enc.some((c) => /nombre/.test(c))) enc.forEach((c, i) => { if (/^equipo$/.test(c)) mapa[i] = "numero"; });
+  const usados = new Set(), libres = ["numero", "nombre", "institucion", "robot", "integrantes"];
+  mapa.forEach((v, i) => {
+    if (v === "ignorar") return;
+    if (!usados.has(v)) { usados.add(v); return; }
+    const libre = libres.find((x) => !usados.has(x));
+    mapa[i] = libre || "ignorar";
+    if (libre) usados.add(libre);
+  });
+  const f = modal({
+    ancho: "900px", titulo: "Revisar columnas antes de importar",
+    cuerpo: `
+      <p style="color:var(--gris)">Indique qué representa cada columna. Se importarán <b>${datos.length}</b> filas.</p>
+      <div class="tabla-cont" style="border:1px solid var(--gris-linea);border-radius:var(--r-s)"><table>
+        <thead><tr>${cabecera.map((c, i) => `<th><div style="margin-bottom:6px">${h(c)}</div>
+          <select data-col="${i}">${CAMPOS_IMP.map((o) => `<option value="${o.v}" ${mapa[i] === o.v ? "selected" : ""}>${o.t}</option>`).join("")}</select></th>`).join("")}</tr></thead>
+        <tbody>${datos.slice(0, 6).map((r) => `<tr>${cabecera.map((_, i) => `<td>${h(r[i] || "")}</td>`).join("")}</tr>`).join("")}</tbody>
+      </table></div>
+      <div class="campo" style="margin-top:16px"><label><input type="checkbox" id="impReemplazar" style="width:auto;margin-right:8px">Reemplazar los equipos ya registrados</label></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="impConfirmar">Importar ${datos.length} equipos</button>`,
+  });
+  $("#impConfirmar", f).addEventListener("click", () => {
+    const sel = {}; $$("select[data-col]", f).forEach((s) => (sel[s.dataset.col] = s.value));
+    const reemplazar = $("#impReemplazar", f).checked;
+    if (reemplazar) { E.equipos = []; E.combates = []; E.combateActual = null; E.torneo.generado = false; }
+    let n = 0;
+    datos.forEach((r) => {
+      const e = { id: uid(), numero: "", nombre: "", institucion: "", robot: "", integrantes: [], grupo: null, creado: ahora() };
+      Object.entries(sel).forEach(([i, campo]) => {
+        const v = (r[i] || "").trim(); if (!v || campo === "ignorar") return;
+        if (campo === "integrantes") e.integrantes = partirIntegrantes(v); else e[campo] = v;
+      });
+      if (!e.nombre && !e.institucion && !e.robot) return;
+      if (!e.nombre) e.nombre = e.robot || e.institucion || "Equipo " + (E.equipos.length + 1);
+      if (!e.numero) e.numero = String(E.equipos.length + 1).padStart(2, "0");
+      E.equipos.push(e); n++;
+    });
+    cerrarModal();
+    guardar(`Importación de participantes: ${n} equipos`);
+    render();
+    bot(`<b>¡Listo!</b> Importé ${n} equipos. Revíselos en Participantes y luego genere el sorteo.`);
+    avisar(`${n} equipos importados`, "ok");
+  });
+}
+
+/* ---------------------------------------------------------------- vista: llaves */
+function vLlaves() {
+  if (!E.equipos.length) return `<div class="pag__tope"><h1>Llaves</h1></div>${bienvenida()}`;
+  const cabecera = `<div class="pag__tope"><div><h1>Llaves y formato</h1>
+      <p>${E.torneo.generado ? (E.torneo.modo === "grupos" ? `Fase de grupos · ${E.torneo.grupos.cantidad} grupos · clasifican ${E.torneo.grupos.clasifican} por grupo` : "Eliminación directa") : "Defina cómo se estructura la competencia"}</p></div>
+    <div class="pag__acc">
+      <button class="b ${E.torneo.generado ? "b--linea" : "b--p"}" data-accion="sorteo">${E.torneo.generado ? "Rehacer sorteo" : "Generar sorteo"}</button>
+      ${E.torneo.modo === "grupos" && !E.torneo.eliminatoriaDesdeGrupos ? `<button class="b b--p" data-accion="eliminatoria">Generar eliminatoria</button>` : ""}
+    </div></div>`;
+
+  if (!E.torneo.generado) return cabecera + `<div class="tarjeta"><div class="tarjeta__cuerpo vacio"><div class="bot">
+      <img class="bot__img" data-marca="tecnobot" alt="">
+      <div class="bot__globo">Hay <b>${E.equipos.length} equipos</b> listos. Elija el formato y yo hago el sorteo aleatorio.</div></div>
+      <div class="fila-b" style="justify-content:center;margin-top:20px"><button class="b b--p b--g" data-accion="sorteo">Generar sorteo</button></div></div></div>`;
+
+  const elim = E.combates.filter((c) => c.fase !== "grupos");
+  let html = cabecera;
+  if (E.torneo.modo === "grupos") {
+    const letras = Array.from(new Set(E.equipos.map((e) => e.grupo).filter(Boolean))).sort();
+    html += `<div class="rejilla r2" style="margin-bottom:22px">${letras.map((g) => `
+      <div class="tarjeta"><div class="tarjeta__tope"><h2>Grupo ${g}</h2>
+        <span class="et" style="margin-left:auto">${E.combates.filter((c) => c.grupo === g && c.estado === "finalizado").length}/${E.combates.filter((c) => c.grupo === g).length} combates</span></div>
+        <div class="tabla-cont"><table><thead><tr><th></th><th>Equipo</th><th>PJ</th><th>V</th><th>D</th><th>Pts</th></tr></thead>
+        <tbody>${tablaGrupo(g).map((f, i) => `<tr style="${i < E.torneo.grupos.clasifican ? "background:var(--verde-suave)" : ""}">
+          <td class="pos num ${i === 0 ? "pos--1" : ""}">${i + 1}</td>
+          <td><b>${h(f.equipo.nombre)}</b><div style="font-size:.8rem;color:var(--gris)">${h(f.equipo.institucion || "")}</div></td>
+          <td class="num">${f.pj}</td><td class="num">${f.v}</td><td class="num">${f.d}</td><td class="num"><b>${f.pts}</b></td></tr>`).join("")}</tbody></table></div>
+        <div class="tarjeta__cuerpo" style="border-top:1px solid var(--gris-linea)">
+          <div class="lista-comb">${E.combates.filter((c) => c.grupo === g).map(miniCombate).join("")}</div></div>
+      </div>`).join("")}</div>`;
+  }
+  if (elim.length) {
+    const porFase = {};
+    elim.forEach((c) => { (porFase[c.fase] = porFase[c.fase] || []).push(c); });
+    const orden = ORDEN_FASE.filter((f) => porFase[f]);
+    html += `<div class="tarjeta"><div class="tarjeta__tope"><h2>Cuadro de eliminación</h2></div>
+      <div class="tarjeta__cuerpo"><div class="llaves">
+      ${orden.map((f) => `<div class="llave-col"><div class="llave-col__t">${FASES[f]}</div>
+        ${porFase[f].map((c) => llaveMini(c)).join("")}</div>`).join("")}
+      </div></div></div>`;
+  }
+  return html;
+}
+function llaveMini(c) {
+  const g = c.ganador;
+  const linea = (id, lado) => {
+    const nom = nombreEquipo(id) || "Por definir";
+    const cls = g ? (g === id ? "mini__e--gana" : "mini__e--pierde") : "";
+    return `<div class="mini__e ${cls}"><span>${h(nom)}</span>${g === id ? '<span class="s">Gana</span>' : ""}</div>`;
+  };
+  return `<div class="mini ${c.id === E.combateActual ? "mini--curso" : ""}" data-accion="activar" data-id="${c.id}">
+    <div class="mini__n">Combate ${c.numero}${c.observaciones === "Avanza por BYE (sin rival en el sorteo)" ? " · BYE" : ""}</div>
+    ${linea(c.equipoA, "A")}${linea(c.equipoB, "B")}</div>`;
+}
+function miniCombate(c) {
+  return `<div class="comb ${c.id === E.combateActual ? "comb--activo" : ""}" style="padding:8px 11px">
+    <span class="comb__n num" style="font-size:.9rem">${c.numero}</span>
+    <div class="comb__e" style="font-size:.9rem">
+      <b style="${c.ganador === c.equipoA ? "color:var(--verde-osc)" : ""}">${h(nombreEquipo(c.equipoA) || "—")}</b>
+      <span style="color:var(--gris)">vs</span>
+      <b style="${c.ganador === c.equipoB ? "color:var(--verde-osc)" : ""}">${h(nombreEquipo(c.equipoB) || "—")}</b></div>
+    <span class="et et--${c.estado}" style="margin-left:auto"><span class="punto"></span>${ESTADOS[c.estado]}</span>
+    <button class="b b--xs b--linea" data-accion="activar" data-id="${c.id}">Operar</button></div>`;
+}
+function dialogoSorteo() {
+  const n = E.equipos.length;
+  modal({
+    titulo: "Generar sorteo",
+    cuerpo: `
+      <div class="bot" style="margin-bottom:18px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">Voy a repartir los <b>${n} equipos</b> al azar. Si ya había combates registrados, se reemplazan.</div></div>
+      <div class="campo"><label for="sModo">Formato de la competencia</label>
+        <select id="sModo">
+          <option value="eliminacion">Eliminación directa (con BYE si falta rival)</option>
+          <option value="grupos">Fase de grupos y luego eliminación</option>
+        </select></div>
+      <div id="sGrupos" hidden>
+        <div class="rejilla r2">
+          <div class="campo"><label for="sCant">Cantidad de grupos</label><input id="sCant" type="number" min="1" max="8" value="${Math.max(1, Math.min(4, Math.floor(n / 3) || 1))}"></div>
+          <div class="campo"><label for="sClas">Clasifican por grupo</label><input id="sClas" type="number" min="1" max="4" value="2"></div>
+        </div>
+        <div class="pista">Dentro de cada grupo todos juegan contra todos. La eliminatoria se genera después, cuando usted lo indique.</div>
+      </div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="sGenerar">Generar sorteo</button>`,
+  });
+  $("#sModo").addEventListener("change", (e) => { $("#sGrupos").hidden = e.target.value !== "grupos"; });
+  $("#sGenerar").addEventListener("click", () => {
+    const modo = $("#sModo").value;
+    const op = { cantidad: parseInt($("#sCant")?.value || 4, 10), clasifican: parseInt($("#sClas")?.value || 2, 10) };
+    cerrarModal();
+    generarSorteo(modo, op);
+  });
+}
+
+/* ---------------------------------------------------------------- vista: combate en vivo */
+function vCombate() {
+  const c = combate(E.combateActual) || combatesListos()[0] || null;
+  if (c && !E.combateActual) { E.combateActual = c.id; }
+  if (!c) return `<div class="pag__tope"><h1>Combate en vivo</h1></div>
+    <div class="tarjeta"><div class="tarjeta__cuerpo vacio"><div class="bot"><img class="bot__img" data-marca="tecnobot" alt="">
+      <div class="bot__globo">${E.torneo.generado ? "No hay combates listos. Puede elegir uno desde la lista de combates." : "Primero genere el sorteo en la sección Llaves."}</div></div>
+      <div class="fila-b" style="justify-content:center;margin-top:18px">
+        <button class="b b--linea" data-ir="${E.torneo.generado ? "combates" : "llaves"}">${E.torneo.generado ? "Ver combates" : "Ir a Llaves"}</button></div></div></div>`;
+
+  const a = equipo(c.equipoA), b = equipo(c.equipoB);
+  const fin = c.estado === "finalizado";
+  const r = restante(c);
+  const corre = relojCorriendo(c);
+  const clsReloj = fin ? "" : corre ? (r <= 15000 ? "reloj--alerta" : "reloj--corre") : r === 0 ? "reloj--fin" : "";
+  const sig = proximoCombate();
+
+  return `
+  <div class="pag__tope"><div><h1>Combate en vivo</h1><p>El juez decide; la plataforma registra la decisión.</p></div>
+    <div class="pag__acc">
+      <button class="b b--osc" data-accion="cambiarCombate">Cambiar de combate</button>
+      <button class="b b--linea" data-accion="ayuda">Atajos y ayuda</button>
+    </div></div>
+
+  <div class="ring">
+    <div class="ring__tope">
+      <span class="id">Combate ${c.numero}</span>
+      <span class="fase">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""}</span>
+      <span class="et et--${c.estado}"><span class="punto"></span>${ESTADOS[c.estado]}</span>
+      <div class="der">
+        ${sig ? `<span style="color:#aebbb4;font-size:.86rem;align-self:center">Sigue: combate ${sig.numero}</span>` : ""}
+      </div>
+    </div>
+
+    <div class="duelo">
+      <div class="lado lado--a ${c.ganador === c.equipoA ? "lado--gana" : ""}">
+        <span class="lado__rot">Equipo A${a?.numero ? " · N.º " + h(a.numero) : ""}</span>
+        <span class="lado__nombre">${h(a?.nombre || "Por definir")}</span>
+        <span class="lado__meta">${h(a?.institucion || "")}</span>
+        ${a?.robot ? `<span class="lado__robot"><i>Robot</i> ${h(a.robot)}</span>` : ""}
+        ${a ? `<button class="b b--xs b--linea" data-accion="ficha" data-id="${a.id}" style="align-self:flex-start;margin-top:10px">Ver ficha</button>` : ""}
+      </div>
+
+      <div class="centro">
+        <span class="vs">VS</span>
+        <span class="reloj js-reloj ${clsReloj}" data-c="${c.id}">${mmss(r)}</span>
+        <div class="fila-b" style="justify-content:center">
+          <button class="b ${corre ? "b--ambar" : "b--p"}" data-accion="reloj" data-modo="${corre ? "detener" : "iniciar"}" ${fin ? "disabled" : ""}>${corre ? "Detener" : "Iniciar"}</button>
+          <button class="b b--linea" data-accion="reloj" data-modo="reiniciar" ${fin ? "disabled" : ""}>Reiniciar</button>
+        </div>
+        <div class="rondas">
+          ${[0, 1, 2].slice(0, E.torneo.rondasPorCombate).map((i) => `<span class="rondas__p ${i < c.rondas.a ? "rondas__p--a" : ""}"></span>`).join("")}
+          <span class="rondas__t">Ronda ${c.rondaActual}</span>
+          ${[0, 1, 2].slice(0, E.torneo.rondasPorCombate).map((i) => `<span class="rondas__p ${i < c.rondas.b ? "rondas__p--b" : ""}"></span>`).join("")}
+        </div>
+        <div class="fila-b" style="justify-content:center">
+          <button class="b b--xs b--linea" data-accion="ronda" data-lado="a" ${fin ? "disabled" : ""}>Ronda para A</button>
+          <button class="b b--xs b--linea" data-accion="ronda" data-lado="reset" ${fin ? "disabled" : ""}>Reiniciar rondas</button>
+          <button class="b b--xs b--linea" data-accion="ronda" data-lado="b" ${fin ? "disabled" : ""}>Ronda para B</button>
+        </div>
+        <button class="b b--xs b--linea" data-accion="descanso">Descanso entre rondas (${mmss(E.torneo.duracionDescanso)})</button>
+      </div>
+
+      <div class="lado lado--b ${c.ganador === c.equipoB ? "lado--gana" : ""}">
+        <span class="lado__rot">Equipo B${b?.numero ? " · N.º " + h(b.numero) : ""}</span>
+        <span class="lado__nombre">${h(b?.nombre || "Por definir")}</span>
+        <span class="lado__meta">${h(b?.institucion || "")}</span>
+        ${b?.robot ? `<span class="lado__robot"><i>Robot</i> ${h(b.robot)}</span>` : ""}
+        ${b ? `<button class="b b--xs b--linea" data-accion="ficha" data-id="${b.id}" style="align-self:flex-start;margin-top:10px">Ver ficha</button>` : ""}
+      </div>
+    </div>
+
+    ${fin ? `<div class="juez" style="grid-template-columns:1fr">
+        <div style="text-align:center;padding:6px">
+          <div style="font-size:.85rem;color:var(--gris);font-weight:600">Resultado registrado por el juez</div>
+          <div style="font-family:Archivo;font-size:1.5rem;font-weight:800;color:var(--verde-osc)">Gana ${h(nombreEquipo(c.ganador) || "—")}</div>
+        </div></div>
+      <div class="pie-ring">
+        <button class="b b--linea" data-accion="reabrir" data-id="${c.id}">Editar resultado</button>
+        ${sig ? `<button class="b b--p" data-accion="activar" data-id="${sig.id}">Pasar al combate ${sig.numero}</button>` : ""}
+        <button class="b b--linea" data-accion="cambiarCombate">Elegir otro combate</button>
+      </div>`
+      : `<div class="juez">
+        <button class="b b--a" data-accion="gana" data-lado="a" ${!c.equipoA || !c.equipoB ? "disabled" : ""}>Ganó equipo A${a ? " · " + h(a.nombre) : ""}</button>
+        <button class="b b--b" data-accion="gana" data-lado="b" ${!c.equipoA || !c.equipoB ? "disabled" : ""}>Ganó equipo B${b ? " · " + h(b.nombre) : ""}</button>
+      </div>
+      <div class="pie-ring">
+        <button class="b b--linea" data-accion="estado" data-e="curso">Marcar en curso</button>
+        <button class="b b--linea" data-accion="estado" data-e="pausado">Pausar combate</button>
+        <button class="b b--linea" data-accion="estado" data-e="reprogramado">Reprogramar</button>
+        <button class="b b--linea" data-accion="observaciones" data-id="${c.id}">Observaciones</button>
+      </div>`}
+  </div>
+
+  ${c.observaciones ? `<div class="tarjeta" style="margin-top:16px"><div class="tarjeta__cuerpo">
+     <h3 style="margin-bottom:6px">Observaciones</h3><p style="margin:0">${h(c.observaciones)}</p></div></div>` : ""}
+
+  <div class="tarjeta" style="margin-top:16px">
+    <div class="tarjeta__tope"><h2>Siguientes en la fila</h2>
+      <button class="b b--xs b--linea" data-accion="cambiarCombate" style="margin-left:auto">Cambiar de combate</button></div>
+    <div class="tarjeta__cuerpo">${listaCortaCombates(5)}</div>
+  </div>`;
+}
+function dialogoCambioCombate() {
+  const l = combatesOrdenados();
+  modal({
+    ancho: "760px", titulo: "Cambiar de combate",
+    cuerpo: `
+      <div class="bot" style="margin-bottom:14px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">Puede saltar a cualquier combate. El actual <b>no se borra</b>: queda con su reloj, sus rondas y sus datos tal como están.</div></div>
+      <div class="lista-comb" style="max-height:52vh;overflow:auto">
+        ${l.map((c) => `<div class="comb ${c.id === E.combateActual ? "comb--activo" : ""}">
+          <span class="comb__n num">${c.numero}</span>
+          <div class="comb__e"><b>${h(nombreEquipo(c.equipoA) || "Por definir")}</b> <span style="color:var(--gris)">vs</span> <b>${h(nombreEquipo(c.equipoB) || "Por definir")}</b>
+            <div style="font-size:.8rem;color:var(--gris)">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""} · ${mmss(restante(c))} en el reloj</div></div>
+          <span class="et et--${c.estado}"><span class="punto"></span>${ESTADOS[c.estado]}</span>
+          <button class="b b--xs ${c.id === E.combateActual ? "b--linea" : "b--p"}" data-accion="activar" data-id="${c.id}" ${c.id === E.combateActual ? "disabled" : ""}>${c.id === E.combateActual ? "Actual" : "Ir"}</button>
+        </div>`).join("")}
+      </div>`,
+  });
+}
+function dialogoGanador(c, lado) {
+  const idG = lado === "a" ? c.equipoA : c.equipoB;
+  const idP = lado === "a" ? c.equipoB : c.equipoA;
+  modal({
+    titulo: "¿Confirmar ganador?",
+    cuerpo: `
+      <div class="bot" style="margin-bottom:16px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">Voy a registrar la decisión del juez para el <b>combate ${c.numero}</b>.</div></div>
+      <div style="text-align:center;padding:14px;border:2px solid var(--verde);border-radius:var(--r-m);background:var(--verde-suave)">
+        <div style="font-size:.82rem;font-weight:700;color:var(--verde-osc)">Ganador</div>
+        <div style="font-family:Archivo;font-size:1.75rem;font-weight:800;line-height:1.1">${h(nombreEquipo(idG) || "—")}</div>
+        <div style="color:var(--grafito)">${h(equipo(idG)?.institucion || "")}</div>
+      </div>
+      <p style="text-align:center;color:var(--gris);margin:12px 0 0">Pierde ${h(nombreEquipo(idP) || "—")}</p>
+      <div class="campo" style="margin-top:14px"><label for="gObs">Observación del juez (opcional)</label>
+        <input id="gObs" placeholder="Ej: decisión por puntos, salida del dohyo, abandono"></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="gConfirmar">Confirmar ganador</button>`,
+  });
+  $("#gConfirmar").addEventListener("click", () => {
+    const obs = $("#gObs").value.trim();
+    cerrarModal();
+    if (obs) { c.observaciones = (c.observaciones ? c.observaciones + " · " : "") + obs; }
+    registrarGanador(c.id, idG, obs);
+  });
+}
+
+/* ---------------------------------------------------------------- vista: combates */
+function vCombates() {
+  if (!E.combates.length) return `<div class="pag__tope"><h1>Combates</h1></div>
+    <div class="tarjeta"><div class="tarjeta__cuerpo vacio"><div class="bot"><img class="bot__img" data-marca="tecnobot" alt="">
+      <div class="bot__globo">Aún no hay combates. Genere el sorteo desde la sección Llaves.</div></div>
+      <div class="fila-b" style="justify-content:center;margin-top:16px"><button class="b b--p" data-ir="llaves">Ir a Llaves</button></div></div></div>`;
+  const filtros = [["todos", "Todos"], ["listos", "Por disputar"], ["finalizado", "Finalizados"], ["pausado", "Pausados o reprogramados"]];
+  let l = combatesOrdenados();
+  if (filtroCombates === "listos") l = l.filter((c) => ["pendiente", "proximo"].includes(c.estado));
+  if (filtroCombates === "finalizado") l = l.filter((c) => c.estado === "finalizado");
+  if (filtroCombates === "pausado") l = l.filter((c) => ["pausado", "reprogramado", "curso"].includes(c.estado));
+
+  return `
+  <div class="pag__tope"><div><h1>Combates</h1><p>${E.combates.length} en total · ${E.combates.filter((c) => c.estado === "finalizado").length} finalizados</p></div>
+    <div class="pag__acc"><button class="b b--p" data-ir="combate">Ir al combate en vivo</button></div></div>
+  <div class="fila-b" style="margin-bottom:14px">
+    ${filtros.map(([v, t]) => `<button class="b b--xs ${filtroCombates === v ? "b--osc" : "b--linea"}" data-filtro="${v}">${t}</button>`).join("")}
+  </div>
+  <div class="tarjeta"><div class="tarjeta__cuerpo">
+    ${l.length ? `<div class="lista-comb">${l.map((c) => `
+      <div class="comb ${c.id === E.combateActual ? "comb--activo" : ""}">
+        <span class="comb__n num">${c.numero}</span>
+        <div class="comb__e">
+          <b style="${c.ganador === c.equipoA ? "color:var(--verde-osc)" : ""}">${h(nombreEquipo(c.equipoA) || "Por definir")}</b>
+          <span style="color:var(--gris)">vs</span>
+          <b style="${c.ganador === c.equipoB ? "color:var(--verde-osc)" : ""}">${h(nombreEquipo(c.equipoB) || "Por definir")}</b>
+          <div style="font-size:.82rem;color:var(--gris)">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""}${c.observaciones ? " · " + h(c.observaciones) : ""}</div>
+        </div>
+        <span class="et et--${c.estado}"><span class="punto"></span>${ESTADOS[c.estado]}</span>
+        <div class="comb__acc">
+          ${c.estado === "finalizado"
+      ? `<button class="b b--xs b--linea" data-accion="reabrir" data-id="${c.id}">Editar resultado</button>`
+      : `<button class="b b--xs b--p" data-accion="activar" data-id="${c.id}">Operar</button>`}
+          <button class="b b--xs b--linea" data-accion="detalleCombate" data-id="${c.id}">Detalle</button>
+        </div>
+      </div>`).join("")}</div>`
+      : `<p style="color:var(--gris);text-align:center;padding:20px">No hay combates en esta vista.</p>`}
+  </div></div>`;
+}
+function detalleCombate(id) {
+  const c = combate(id); if (!c) return;
+  modal({
+    titulo: `Combate ${c.numero}`,
+    cuerpo: `
+      <div class="rejilla r2" style="margin-bottom:14px">
+        <div><div class="pista">Equipo A</div><b>${h(nombreEquipo(c.equipoA) || "Por definir")}</b></div>
+        <div><div class="pista">Equipo B</div><b>${h(nombreEquipo(c.equipoB) || "Por definir")}</b></div>
+        <div><div class="pista">Fase</div>${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""}</div>
+        <div><div class="pista">Estado</div><span class="et et--${c.estado}"><span class="punto"></span>${ESTADOS[c.estado]}</span></div>
+        <div><div class="pista">Rondas ganadas</div>A ${c.rondas.a} — ${c.rondas.b} B</div>
+        <div><div class="pista">Reloj</div><span class="num">${mmss(restante(c))}</span></div>
+      </div>
+      ${c.observaciones ? `<div class="campo"><label>Observaciones</label><div>${h(c.observaciones)}</div></div>` : ""}
+      <h3 style="margin:16px 0 8px">Historial del combate</h3>
+      ${c.historial.length ? `<div style="display:flex;flex-direction:column;gap:7px;font-size:.9rem">
+        ${c.historial.map((x) => `<div><span class="num" style="color:var(--gris)">${fechaCorta(x.ts)}</span> — ${h(x.texto)}</div>`).join("")}</div>`
+      : `<p style="color:var(--gris)">Sin movimientos registrados.</p>`}`,
+    pie: `${c.estado === "finalizado" ? `<button class="b b--linea" data-accion="reabrir" data-id="${c.id}">Editar resultado</button>` : `<button class="b b--p" data-accion="activar" data-id="${c.id}">Operar este combate</button>`}
+          <button class="b b--linea" data-cerrar>Cerrar</button>`,
+  });
+}
+
+/* ---------------------------------------------------------------- vista: clasificación */
+function vClasificacion() {
+  if (!E.equipos.length) return `<div class="pag__tope"><h1>Clasificación</h1></div>${bienvenida()}`;
+  const t = tablaGeneral();
+  const campeonC = E.combates.find((c) => c.fase === "final" && c.estado === "finalizado");
+  const terceroC = E.combates.find((c) => c.fase === "tercer" && c.estado === "finalizado");
+  return `
+  <div class="pag__tope"><div><h1>Clasificación</h1><p>Victoria: 3 puntos · Derrota: 0 puntos</p></div>
+    <div class="pag__acc"><button class="b b--linea" data-ir="exportar">Exportar</button></div></div>
+
+  ${campeonC ? `<div class="tarjeta" style="margin-bottom:18px;border-color:var(--verde)">
+    <div class="tarjeta__cuerpo" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <img class="bot__img" data-marca="tecnobot" alt="" style="width:72px;height:72px">
+      <div><div style="font-size:.85rem;font-weight:700;color:var(--verde-osc)">Campeón de la competencia</div>
+        <div style="font-family:Archivo;font-size:1.9rem;font-weight:800;line-height:1.1">${h(nombreEquipo(campeonC.ganador) || "—")}</div>
+        <div style="color:var(--grafito)">${h(equipo(campeonC.ganador)?.institucion || "")}</div></div>
+      ${terceroC ? `<div style="margin-left:auto;text-align:right"><div class="pista">Tercer puesto</div><b>${h(nombreEquipo(terceroC.ganador) || "—")}</b></div>` : ""}
+    </div></div>` : ""}
+
+  <div class="tarjeta"><div class="tarjeta__tope"><h2>Tabla general</h2></div>
+    <div class="tabla-cont"><table>
+      <thead><tr><th>Pos</th><th>Equipo</th><th>Institución</th><th>PJ</th><th>V</th><th>D</th><th>Pts</th><th>Estado</th></tr></thead>
+      <tbody>${t.map((f, i) => `<tr>
+        <td class="pos num ${i === 0 ? "pos--1" : ""}">${i + 1}</td>
+        <td><button class="b b--xs b--linea" data-accion="ficha" data-id="${f.equipo.id}">${h(f.equipo.nombre)}</button>
+          ${f.equipo.grupo ? `<span class="chip">Grupo ${h(f.equipo.grupo)}</span>` : ""}</td>
+        <td>${h(f.equipo.institucion || "—")}</td>
+        <td class="num">${f.pj}</td><td class="num">${f.v}</td><td class="num">${f.d}</td><td class="num"><b>${f.pts}</b></td>
+        <td>${campeonC && campeonC.ganador === f.equipo.id ? '<span class="et et--finalizado">Campeón</span>'
+      : f.eliminado ? '<span class="et et--eliminado">Eliminado</span>' : '<span class="et et--proximo">En competencia</span>'}</td>
+      </tr>`).join("")}</tbody></table></div></div>
+
+  ${E.torneo.modo === "grupos" ? `<div class="rejilla r2" style="margin-top:18px">
+    ${Array.from(new Set(E.equipos.map((e) => e.grupo).filter(Boolean))).sort().map((g) => `
+      <div class="tarjeta"><div class="tarjeta__tope"><h2>Grupo ${g}</h2></div>
+      <div class="tabla-cont"><table><thead><tr><th></th><th>Equipo</th><th>PJ</th><th>V</th><th>D</th><th>Pts</th></tr></thead>
+      <tbody>${tablaGrupo(g).map((f, i) => `<tr style="${i < E.torneo.grupos.clasifican ? "background:var(--verde-suave)" : ""}">
+        <td class="pos num">${i + 1}</td><td>${h(f.equipo.nombre)}</td>
+        <td class="num">${f.pj}</td><td class="num">${f.v}</td><td class="num">${f.d}</td><td class="num"><b>${f.pts}</b></td></tr>`).join("")}</tbody>
+      </table></div></div>`).join("")}</div>` : ""}`;
+}
+function fichaEquipo(id) {
+  const e = equipo(id); if (!e) return;
+  const est = estadisticas().get(id);
+  const pos = tablaGeneral().findIndex((f) => f.equipo.id === id) + 1;
+  modal({
+    ancho: "700px", titulo: h(e.nombre),
+    cuerpo: `
+      <div class="rejilla r3" style="margin-bottom:18px">
+        <div><div class="pista">Número</div><b class="num">${h(e.numero)}</b></div>
+        <div><div class="pista">Institución</div><b>${h(e.institucion || "—")}</b></div>
+        <div><div class="pista">Robot</div><b>${h(e.robot || "—")}</b></div>
+        <div><div class="pista">Grupo</div><b>${e.grupo ? "Grupo " + h(e.grupo) : "—"}</b></div>
+        <div><div class="pista">Posición general</div><b class="num">${pos || "—"}</b></div>
+        <div><div class="pista">Estado</div>${est.eliminado ? '<span class="et et--eliminado">Eliminado</span>' : '<span class="et et--proximo">En competencia</span>'}</div>
+      </div>
+      <div class="campo"><label>Integrantes</label>
+        ${(e.integrantes || []).length ? (e.integrantes || []).map((i) => `<span class="chip">${h(i)}</span>`).join("") : "<span style='color:var(--gris)'>Sin integrantes registrados</span>"}</div>
+      <div class="rejilla r4" style="margin:16px 0">
+        <div class="tarjeta dato"><span class="cifra num">${est.pj}</span><span class="rotulo">Combates</span></div>
+        <div class="tarjeta dato"><span class="cifra num">${est.v}</span><span class="rotulo">Victorias</span></div>
+        <div class="tarjeta dato"><span class="cifra num">${est.d}</span><span class="rotulo">Derrotas</span></div>
+        <div class="tarjeta dato"><span class="cifra num">${est.pts}</span><span class="rotulo">Puntos</span></div>
+      </div>
+      <h3 style="margin-bottom:8px">Combates del equipo</h3>
+      ${est.combates.length ? `<div class="lista-comb">${est.combates.map((c) => {
+      const rival = c.equipoA === id ? c.equipoB : c.equipoA;
+      const res = c.estado !== "finalizado" ? "" : c.ganador === id ? "Victoria" : "Derrota";
+      return `<div class="comb" style="padding:8px 11px">
+          <span class="comb__n num" style="font-size:.9rem">${c.numero}</span>
+          <div class="comb__e" style="font-size:.9rem">vs <b>${h(nombreEquipo(rival) || "Por definir")}</b>
+            <div style="font-size:.8rem;color:var(--gris)">${FASES[c.fase]}${c.grupo ? " · Grupo " + c.grupo : ""} · rondas ${c.equipoA === id ? c.rondas.a + "-" + c.rondas.b : c.rondas.b + "-" + c.rondas.a}</div></div>
+          <span class="et ${res === "Victoria" ? "et--finalizado" : res === "Derrota" ? "et--eliminado" : "et--" + c.estado}">${res || ESTADOS[c.estado]}</span></div>`;
+    }).join("")}</div>` : `<p style="color:var(--gris)">Todavía no tiene combates asignados.</p>`}`,
+    pie: `<button class="b b--linea" data-accion="editarEquipo" data-id="${e.id}">Editar equipo</button><button class="b b--p" data-cerrar>Cerrar</button>`,
+  });
+}
+
+/* ---------------------------------------------------------------- exportación */
+/* ---------------------------------------------------------------- escritor .xlsx propio (sin librerías, funciona sin conexión)
+   Construye un paquete OOXML mínimo (una hoja de cálculo válida para Excel,
+   LibreOffice, Google Sheets, Numbers) empaquetado en un ZIP sin comprimir. */
+const TABLA_CRC32 = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(bytes) {
+  let c = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) c = TABLA_CRC32[(c ^ bytes[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+}
+function utf8(str) { return new TextEncoder().encode(str); }
+function dosFechaHora() {
+  const d = new Date();
+  const hora = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  const fecha = (((d.getFullYear() - 1980) & 0x7f) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  return { hora, fecha };
+}
+// ZIP sin compresión (método "store"): formato válido, aceptado por todo lector de .xlsx.
+function construirZip(archivos) {
+  const partes = [], centrales = [];
+  let desplazamiento = 0;
+  const { hora, fecha } = dosFechaHora();
+  archivos.forEach(({ nombre, datos }) => {
+    const nb = utf8(nombre), db = datos;
+    const crc = crc32(db);
+    const cab = new DataView(new ArrayBuffer(30));
+    cab.setUint32(0, 0x04034b50, true); cab.setUint16(4, 20, true); cab.setUint16(6, 0, true);
+    cab.setUint16(8, 0, true); cab.setUint16(10, hora, true); cab.setUint16(12, fecha, true);
+    cab.setUint32(14, crc, true); cab.setUint32(18, db.length, true); cab.setUint32(22, db.length, true);
+    cab.setUint16(26, nb.length, true); cab.setUint16(28, 0, true);
+    partes.push(new Uint8Array(cab.buffer), nb, db);
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true); cd.setUint16(8, 0, true);
+    cd.setUint16(10, 0, true); cd.setUint16(12, hora, true); cd.setUint16(14, fecha, true);
+    cd.setUint32(16, crc, true); cd.setUint32(20, db.length, true); cd.setUint32(24, db.length, true);
+    cd.setUint16(28, nb.length, true); cd.setUint16(30, 0, true); cd.setUint16(32, 0, true); cd.setUint16(34, 0, true);
+    cd.setUint16(36, 0, true); cd.setUint32(38, 0, true); cd.setUint32(42, desplazamiento, true);
+    centrales.push(new Uint8Array(cd.buffer), nb);
+    desplazamiento += 30 + nb.length + db.length;
+  });
+  const inicioCentral = desplazamiento;
+  let tamCentral = 0; centrales.forEach((p) => (tamCentral += p.length));
+  const fin = new DataView(new ArrayBuffer(22));
+  fin.setUint32(0, 0x06054b50, true); fin.setUint16(4, 0, true); fin.setUint16(6, 0, true);
+  fin.setUint16(8, archivos.length, true); fin.setUint16(10, archivos.length, true);
+  fin.setUint32(12, tamCentral, true); fin.setUint32(16, inicioCentral, true); fin.setUint16(20, 0, true);
+  const total = [...partes, ...centrales, new Uint8Array(fin.buffer)];
+  let tam = 0; total.forEach((p) => (tam += p.length));
+  const salida = new Uint8Array(tam); let pos = 0;
+  total.forEach((p) => { salida.set(p, pos); pos += p.length; });
+  return salida;
+}
+function xmlEsc(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+function colLetra(n) { let s = ""; n++; while (n > 0) { const r = (n - 1) % 26; s = String.fromCharCode(65 + r) + s; n = Math.floor((n - 1) / 26); } return s; }
+function hojaXml(filas) {
+  const cuerpo = filas.map((fila, fi) => {
+    const celdas = fila.map((valor, ci) => {
+      const ref = colLetra(ci) + (fi + 1);
+      if (valor === "" || valor === null || valor === undefined) return "";
+      if (typeof valor === "number" && isFinite(valor)) return `<c r="${ref}"><v>${valor}</v></c>`;
+      return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(valor)}</t></is></c>`;
+    }).join("");
+    return `<row r="${fi + 1}">${celdas}</row>`;
+  }).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>${cuerpo}</sheetData></worksheet>`;
+}
+function construirXlsx(hojas) {
+  // hojas: [[nombre, arrayDeFilas], ...]
+  const nombreSeguro = (n) => String(n).replace(/[\\/*?:\[\]]/g, "").slice(0, 31) || "Hoja";
+  const archivos = [];
+  archivos.push({ nombre: "[Content_Types].xml", datos: utf8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+${hojas.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}
+</Types>`) });
+  archivos.push({ nombre: "_rels/.rels", datos: utf8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`) });
+  archivos.push({ nombre: "xl/workbook.xml", datos: utf8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets>${hojas.map(([n], i) => `<sheet name="${xmlEsc(nombreSeguro(n))}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join("")}</sheets>
+</workbook>`) });
+  archivos.push({ nombre: "xl/_rels/workbook.xml.rels", datos: utf8(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+${hojas.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("")}
+</Relationships>`) });
+  hojas.forEach(([, filas], i) => archivos.push({ nombre: `xl/worksheets/sheet${i + 1}.xml`, datos: utf8(hojaXml(filas)) }));
+  return construirZip(archivos);
+}
+function csvDe(filas) {
+  return "\uFEFF" + filas.map((f) => f.map((c) => {
+    const s = String(c ?? "");
+    return /[";\n,]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }).join(",")).join("\r\n");
+}
+function datosParticipantes() {
+  const est = estadisticas();
+  return [["Numero", "Equipo", "Institucion", "Robot", "Integrantes", "Grupo", "Combates", "Victorias", "Derrotas", "Puntos"]]
+    .concat(E.equipos.map((e) => { const s = est.get(e.id); return [e.numero, e.nombre, e.institucion, e.robot, (e.integrantes || []).join("; "), e.grupo || "", s.pj, s.v, s.d, s.pts]; }));
+}
+function datosResultados() {
+  return [["Combate", "Fase", "Grupo", "Equipo A", "Equipo B", "Estado", "Ganador", "Rondas A", "Rondas B", "Observaciones"]]
+    .concat(combatesOrdenados().map((c) => [c.numero, FASES[c.fase], c.grupo || "", nombreEquipo(c.equipoA) || "", nombreEquipo(c.equipoB) || "",
+    ESTADOS[c.estado], nombreEquipo(c.ganador) || "", c.rondas.a, c.rondas.b, c.observaciones || ""]));
+}
+function datosClasificacion() {
+  const fin = E.combates.find((c) => c.fase === "final" && c.estado === "finalizado");
+  const ter = E.combates.find((c) => c.fase === "tercer" && c.estado === "finalizado");
+  const rotulo = (f) => fin && fin.ganador === f.equipo.id ? "Campeon"
+    : fin && [fin.equipoA, fin.equipoB].includes(f.equipo.id) ? "Subcampeon"
+      : ter && ter.ganador === f.equipo.id ? "Tercer puesto"
+        : f.eliminado ? "Eliminado" : "En competencia";
+  return [["Posicion", "Equipo", "Institucion", "Robot", "Grupo", "Combates", "Victorias", "Derrotas", "Puntos", "Estado"]]
+    .concat(tablaGeneral().map((f, i) => [i + 1, f.equipo.nombre, f.equipo.institucion, f.equipo.robot, f.equipo.grupo || "", f.pj, f.v, f.d, f.pts, rotulo(f)]));
+}
+function datosLlaves() {
+  return [["Fase", "Combate", "Grupo", "Equipo A", "Equipo B", "Ganador", "Estado"]]
+    .concat(combatesOrdenados().map((c) => [FASES[c.fase], c.numero, c.grupo || "", nombreEquipo(c.equipoA) || "Por definir", nombreEquipo(c.equipoB) || "Por definir", nombreEquipo(c.ganador) || "", ESTADOS[c.estado]]));
+}
+async function entregar(nombre, datos) {
+  const dl = await cap("downloads");
+  if (dl) {
+    try { await dl.save({ filename: nombre, data: datos }); avisar("Archivo entregado: " + nombre, "ok"); }
+    catch (err) { if (err && err.code === "declined") return; avisar("No se pudo entregar el archivo", "mal"); }
+    return;
+  }
+  const tipo = /\.json$/i.test(nombre) ? "application/json;charset=utf-8" : "text/csv;charset=utf-8";
+  const blob = datos instanceof Blob ? datos : new Blob([datos], { type: tipo });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = nombre; document.body.appendChild(a); a.click();
+  a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
+  avisar("Archivo descargado: " + nombre, "ok");
+}
+function exportarCSV(clave) {
+  const mapa = { participantes: datosParticipantes, resultados: datosResultados, clasificacion: datosClasificacion, llaves: datosLlaves };
+  entregar(`sumobot_${clave}.csv`, csvDe(mapa[clave]()));
+}
+function exportarXLSX(clave) {
+  const mapa = { participantes: ["Participantes", datosParticipantes], resultados: ["Resultados", datosResultados], clasificacion: ["Clasificacion", datosClasificacion], llaves: ["Llaves", datosLlaves] };
+  const hojas = clave === "todo" ? Object.values(mapa).map(([t, f]) => [t, f()]) : [[mapa[clave][0], mapa[clave][1]()]];
+  const bytes = construirXlsx(hojas);
+  entregar(`sumobot_${clave}.xlsx`, new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+}
+function vExportar() {
+  const bloque = (clave, titulo, desc) => `<div class="tarjeta"><div class="tarjeta__cuerpo">
+    <h3>${titulo}</h3><p style="color:var(--gris);font-size:.9rem">${desc}</p>
+    <div class="fila-b"><button class="b b--linea" data-exp="csv:${clave}">CSV</button>
+      <button class="b b--p" data-exp="xlsx:${clave}">Excel</button></div></div></div>`;
+  return `
+  <div class="pag__tope"><div><h1>Exportar</h1><p>Descargue la información de la competencia en cualquier momento</p></div>
+    <div class="pag__acc"><button class="b b--osc" data-exp="xlsx:todo">Excel con todo</button></div></div>
+  <div class="rejilla r2">
+    ${bloque("participantes", "Participantes", "Equipos, instituciones, robots e integrantes con su balance.")}
+    ${bloque("resultados", "Resultados", "Todos los combates con estado, ganador, rondas y observaciones.")}
+    ${bloque("clasificacion", "Clasificación", "Tabla general ordenada por puntos, victorias y derrotas.")}
+    ${bloque("llaves", "Llaves", "Estructura completa del cuadro y de la fase de grupos.")}
+  </div>
+  <div class="sep"></div>
+  <div class="tarjeta"><div class="tarjeta__cuerpo">
+    <h3>Respaldo completo</h3>
+    <p style="color:var(--gris);font-size:.9rem">Guarda todo el torneo en un archivo. Sirve para pasar la competencia a otro equipo o para restaurarla si algo falla.</p>
+    <div class="fila-b">
+      <button class="b b--linea" data-accion="respaldoBajar">Descargar respaldo</button>
+      <button class="b b--linea" data-accion="respaldoSubir">Restaurar respaldo</button>
+    </div></div></div>`;
+}
+
+/* ---------------------------------------------------------------- vista: marca */
+function temaActual() {
+  try { return localStorage.getItem("sumobot.tema") || "auto"; } catch (e) { return "auto"; }
+}
+function vMarca() {
+  return `
+  <div class="pag__tope"><div><h1>Marca y ajustes</h1><p>Identidad institucional y parámetros de la competencia</p></div></div>
+
+  <div class="tarjeta" style="margin-bottom:18px">
+    <div class="tarjeta__tope"><h2>Imágenes institucionales</h2></div>
+    <div class="tarjeta__cuerpo">
+      <div class="bot" style="margin-bottom:18px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">La plataforma <b>no dibuja ni modifica logotipos</b>. Hay dos formas de poner los reales:
+          cargarlos aquí, o dejar los archivos en la carpeta <code>/assets/</code> con exactamente estos nombres.</div></div>
+      <div class="rejilla r3">
+        ${Object.entries(MARCAS).map(([k, m]) => `<div class="marca-caja">
+          <img data-marca="${k}" alt="${m.titulo}">
+          <div style="font-weight:600;font-size:.88rem;margin-bottom:4px">${m.titulo}</div>
+          <code>assets/${m.archivo}</code>
+          <div class="fila-b" style="justify-content:center;margin-top:10px">
+            <button class="b b--xs b--linea" data-marca-cargar="${k}">Cargar imagen</button>
+            ${E.marca[k] ? `<button class="b b--xs b--peligro" data-marca-quitar="${k}">Quitar</button>` : ""}
+          </div></div>`).join("")}
+      </div>
+      <div class="pista" style="margin-top:14px">Si sirve la plataforma desde una carpeta propia, basta con reemplazar los archivos de <code>/assets/</code>
+        conservando nombre y formato: las imágenes se actualizan solas, sin tocar el código. Preferiblemente PNG con fondo transparente.</div>
+    </div>
+  </div>
+
+  <div class="tarjeta" style="margin-bottom:18px">
+    <div class="tarjeta__tope"><h2>Parámetros de la competencia</h2></div>
+    <div class="tarjeta__cuerpo">
+      <div class="rejilla r2">
+        <div class="campo"><label for="aNombre">Nombre del torneo</label><input id="aNombre" value="${h(E.torneo.nombre)}"></div>
+        <div class="campo"><label for="aSede">Organizadores / sede</label><input id="aSede" value="${h(E.torneo.sede)}"></div>
+        <div class="campo"><label for="aDur">Duración del combate (minutos:segundos)</label><input id="aDur" value="${mmss(E.torneo.duracionCombate)}"></div>
+        <div class="campo"><label for="aDesc">Descanso entre rondas (minutos:segundos)</label><input id="aDesc" value="${mmss(E.torneo.duracionDescanso)}"></div>
+        <div class="campo"><label for="aRondas">Rondas por combate</label><input id="aRondas" type="number" min="1" max="3" value="${E.torneo.rondasPorCombate}"></div>
+        <div class="campo"><label for="aTema">Apariencia</label><select id="aTema">
+          ${[["auto", "Según el sistema"], ["light", "Siempre clara"], ["dark", "Siempre oscura"]].map(([v, t]) =>
+      `<option value="${v}" ${temaActual() === v ? "selected" : ""}>${t}</option>`).join("")}</select></div>
+      </div>
+      <button class="b b--p" data-accion="guardarAjustes">Guardar ajustes</button>
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <div class="tarjeta__tope"><h2>Datos de la competencia</h2></div>
+    <div class="tarjeta__cuerpo">
+      <p style="color:var(--gris);font-size:.9rem">${h(textoSync)}. Todo se guarda automáticamente en cada acción.</p>
+      <div class="fila-b">
+        <button class="b b--linea" data-accion="respaldoBajar">Descargar respaldo</button>
+        <button class="b b--peligro" data-accion="reiniciarTodo">Reiniciar la competencia</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------------------------------------------------------- reloj: tic */
+setInterval(() => {
+  $$(".js-reloj").forEach((n) => {
+    const c = combate(n.dataset.c); if (!c) return;
+    const r = restante(c);
+    const t = mmss(r);
+    if (n.textContent !== t) n.textContent = t;
+    if (c.estado !== "finalizado" && relojCorriendo(c)) {
+      n.classList.toggle("reloj--alerta", r <= 15000);
+      n.classList.toggle("reloj--corre", r > 15000);
+      if (r === 0) {
+        detenerReloj(c);
+        c.historial.push({ ts: ahora(), texto: "Se agotó el tiempo reglamentario" });
+        guardar(`Combate ${c.numero}: tiempo cumplido`);
+        bot("<b>¡Tiempo!</b> Se cumplió el tiempo reglamentario. La decisión queda en manos del juez.", 7000);
+        render();
+      }
+    }
+  });
+  const d = $("#relojDescanso");
+  if (d && d.dataset.fin) {
+    const r = Math.max(0, parseInt(d.dataset.fin, 10) - ahora());
+    d.textContent = mmss(r);
+    if (r === 0) { delete d.dataset.fin; avisar("Terminó el descanso entre rondas"); }
+  }
+}, 200);
+
+/* ---------------------------------------------------------------- acciones */
+function accionReloj(modo) {
+  const c = combate(E.combateActual); if (!c) return;
+  if (!c.reloj) c.reloj = { restante: E.torneo.duracionCombate, desde: null };
+  if (modo === "iniciar") {
+    if (restante(c) === 0) c.reloj.restante = E.torneo.duracionCombate;
+    c.reloj.desde = ahora();
+    if (c.estado !== "finalizado") c.estado = "curso";
+    c.historial.push({ ts: ahora(), texto: "Reloj iniciado" });
+    guardar(`Combate ${c.numero}: reloj iniciado`);
+  } else if (modo === "detener") {
+    detenerReloj(c);
+    if (c.estado === "curso") c.estado = "pausado";
+    c.historial.push({ ts: ahora(), texto: "Reloj detenido en " + mmss(restante(c)) });
+    guardar(`Combate ${c.numero}: reloj detenido`);
+  } else {
+    c.reloj = { restante: E.torneo.duracionCombate, desde: null };
+    c.historial.push({ ts: ahora(), texto: "Reloj reiniciado" });
+    guardar(`Combate ${c.numero}: reloj reiniciado`);
+  }
+  render();
+}
+function accionRonda(lado) {
+  const c = combate(E.combateActual); if (!c || c.estado === "finalizado") return;
+  if (lado === "reset") { c.rondas = { a: 0, b: 0 }; c.rondaActual = 1; }
+  else {
+    c.rondas[lado] = Math.min(E.torneo.rondasPorCombate, c.rondas[lado] + 1);
+    c.rondaActual = Math.min(E.torneo.rondasPorCombate, c.rondas.a + c.rondas.b + 1);
+    c.reloj = { restante: E.torneo.duracionCombate, desde: null };
+    c.historial.push({ ts: ahora(), texto: `Ronda anotada para el equipo ${lado.toUpperCase()} (${c.rondas.a}-${c.rondas.b})` });
+  }
+  guardar(`Combate ${c.numero}: rondas ${c.rondas.a}-${c.rondas.b}`);
+  render();
+  if (lado !== "reset") bot("Ronda anotada. El marcador de rondas es un apoyo: <b>el resultado del combate lo confirma el juez</b> con los botones verdes.", 5200);
+}
+function activar(id) {
+  const c = combate(id); if (!c) return;
+  const ant = combate(E.combateActual);
+  if (ant && ant.id !== id) { detenerReloj(ant); if (ant.estado === "curso") ant.estado = "pausado"; }
+  E.combateActual = id;
+  guardar(`Combate ${c.numero} puesto como combate actual`);
+  cerrarModal();
+  vista = "combate"; render();
+  const n = $(".ring"); if (n) n.classList.add("pulsa");
+  bot(`<b>Combate ${c.numero}</b> en pantalla: ${h(nombreEquipo(c.equipoA) || "por definir")} vs ${h(nombreEquipo(c.equipoB) || "por definir")}.`, 4200);
+}
+function dialogoObservaciones(id) {
+  const c = combate(id); if (!c) return;
+  modal({
+    titulo: `Observaciones · combate ${c.numero}`,
+    cuerpo: `<div class="campo"><label for="obsT">Anotación del operador o del juez</label>
+      <textarea id="obsT" rows="4" placeholder="Ej: reinicio por falla técnica del robot, decisión del juez, cambio de dohyo">${h(c.observaciones)}</textarea></div>`,
+    pie: `<button class="b b--linea" data-cerrar>Cancelar</button><button class="b b--p" id="obsG">Guardar</button>`,
+  });
+  $("#obsG").addEventListener("click", () => {
+    c.observaciones = $("#obsT").value.trim();
+    c.historial.push({ ts: ahora(), texto: "Observación actualizada" });
+    cerrarModal(); guardar(`Combate ${c.numero}: observación actualizada`); render(); avisar("Observación guardada", "ok");
+  });
+}
+function dialogoAyuda() {
+  modal({
+    titulo: "Cómo operar la competencia",
+    cuerpo: `
+      <div class="bot" style="margin-bottom:16px"><img class="bot__img" data-marca="tecnobot" alt="">
+        <div class="bot__globo">Yo organizo, registro y calculo. <b>Las decisiones deportivas son del juez</b>: nada se determina por sensores ni por tiempo.</div></div>
+      <h3 style="margin-bottom:8px">Atajos de teclado</h3>
+      <div class="tabla-cont"><table><tbody>
+        <tr><td><b>Espacio</b></td><td>Iniciar o detener el reloj</td></tr>
+        <tr><td><b>R</b></td><td>Reiniciar el reloj a ${mmss(E.torneo.duracionCombate)}</td></tr>
+        <tr><td><b>A</b></td><td>Registrar que ganó el equipo A (pide confirmación)</td></tr>
+        <tr><td><b>B</b></td><td>Registrar que ganó el equipo B (pide confirmación)</td></tr>
+        <tr><td><b>C</b></td><td>Abrir el cambio de combate</td></tr>
+      </tbody></table></div>
+      <h3 style="margin:18px 0 8px">Cambiar de combate sin perder nada</h3>
+      <p style="color:var(--grafito)">Si un combate se complica, pulse <b>Cambiar de combate</b> y elija otro. El anterior queda pausado
+      con su reloj, sus rondas y sus observaciones intactas; puede volver cuando quiera y continuar exactamente donde iba.</p>
+      <h3 style="margin:18px 0 8px">Corregir un resultado</h3>
+      <p style="color:var(--grafito)">En un combate finalizado use <b>Editar resultado</b>. Se pide confirmación, se reabre el combate y,
+      si el ganador ya había avanzado en la llave, se limpia ese avance. Todo queda registrado en el historial.</p>`,
+    pie: `<button class="b b--p" data-cerrar>Entendido</button>`,
+  });
+}
+function cargarImagenMarca(clave) {
+  const inp = document.createElement("input");
+  inp.type = "file"; inp.accept = "image/png,image/jpeg,image/svg+xml,image/webp";
+  inp.addEventListener("change", () => {
+    const f = inp.files[0]; if (!f) return;
+    if (f.size > 1400000) { avisar("La imagen supera 1,4 MB. Use una versión más liviana.", "mal"); return; }
+    const r = new FileReader();
+    r.onload = () => { E.marca[clave] = r.result; guardar(`Imagen actualizada: ${MARCAS[clave].titulo}`); render(); avisar("Imagen actualizada", "ok"); };
+    r.readAsDataURL(f);
+  });
+  inp.click();
+}
+function respaldoBajar() {
+  entregar(`respaldo_sumobot_${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(E, null, 2));
+}
+function respaldoSubir() {
+  const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".json,application/json";
+  inp.addEventListener("change", () => {
+    const f = inp.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const d = JSON.parse(r.result);
+        if (!d || !Array.isArray(d.equipos)) throw new Error();
+        confirmar({
+          titulo: "Restaurar respaldo", peligro: true,
+          mensaje: `El respaldo tiene <b>${d.equipos.length} equipos</b> y <b>${(d.combates || []).length} combates</b>. Se reemplaza la competencia actual.`,
+          confirmar: "Restaurar",
+          alConfirmar: () => {
+            E = Object.assign(estadoInicial(), d);
+            E.torneo = Object.assign(estadoInicial().torneo, d.torneo || {});
+            guardar("Competencia restaurada desde un respaldo");
+            render(); avisar("Respaldo restaurado", "ok");
+          },
+        });
+      } catch (e) { avisar("El archivo no es un respaldo válido", "mal"); }
+    };
+    r.readAsText(f);
+  });
+  inp.click();
+}
+function leerDuracion(txt, porDefecto) {
+  const m = String(txt).trim().match(/^(\d{1,2}):(\d{1,2})$/);
+  if (m) return (parseInt(m[1], 10) * 60 + parseInt(m[2], 10)) * 1000;
+  const s = parseInt(txt, 10); return isNaN(s) ? porDefecto : s * 1000;
+}
+
+/* ---------------------------------------------------------------- eventos */
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-ir],[data-accion],[data-filtro],[data-exp],[data-marca-cargar],[data-marca-quitar]");
+  if (!t) return;
+
+  if (t.dataset.ir) { ir(t.dataset.ir); return; }
+  if (t.dataset.filtro) { filtroCombates = t.dataset.filtro; render(); return; }
+  if (t.dataset.exp) { const [f, k] = t.dataset.exp.split(":"); f === "csv" ? exportarCSV(k) : exportarXLSX(k); return; }
+  if (t.dataset.marcaCargar) { cargarImagenMarca(t.dataset.marcaCargar); return; }
+  if (t.dataset.marcaQuitar) { delete E.marca[t.dataset.marcaQuitar]; guardar("Imagen institucional retirada"); render(); return; }
+
+  const id = t.dataset.id;
+  switch (t.dataset.accion) {
+    case "nuevoEquipo": {
+      const f = formEquipo(null);
+      $("#fGuardar", f).addEventListener("click", () => {
+        const nom = $("#fNom").value.trim();
+        if (!nom) { avisar("El equipo necesita un nombre", "mal"); return; }
+        E.equipos.push({
+          id: uid(), numero: $("#fNum").value.trim() || String(E.equipos.length + 1).padStart(2, "0"),
+          nombre: nom, institucion: $("#fIns").value.trim(), robot: $("#fRob").value.trim(),
+          integrantes: partirIntegrantes($("#fInt").value), grupo: null, creado: ahora(),
+        });
+        cerrarModal(); guardar(`Equipo registrado: ${nom}`); render(); avisar("Equipo registrado", "ok");
+        if (E.equipos.length === 1) bot("<b>Primer equipo registrado.</b> Siga agregando o importe el resto desde un CSV.");
+      });
+      break;
+    }
+    case "editarEquipo": {
+      const e = equipo(id); if (!e) break;
+      const f = formEquipo(e);
+      $("#fGuardar", f).addEventListener("click", () => {
+        e.numero = $("#fNum").value.trim(); e.nombre = $("#fNom").value.trim() || e.nombre;
+        e.institucion = $("#fIns").value.trim(); e.robot = $("#fRob").value.trim();
+        e.integrantes = partirIntegrantes($("#fInt").value);
+        cerrarModal(); guardar(`Equipo actualizado: ${e.nombre}`); render(); avisar("Cambios guardados", "ok");
+      });
+      break;
+    }
+    case "borrarEquipo": {
+      const e = equipo(id); if (!e) break;
+      confirmar({
+        titulo: "Eliminar equipo", peligro: true, confirmar: "Eliminar",
+        mensaje: `Se elimina <b>${h(e.nombre)}</b> del listado. Los combates donde aparece quedarán sin ese equipo.`,
+        alConfirmar: () => {
+          E.equipos = E.equipos.filter((x) => x.id !== id);
+          E.combates.forEach((c) => {
+            if (c.equipoA === id) c.equipoA = null;
+            if (c.equipoB === id) c.equipoB = null;
+            if (c.ganador === id) { c.ganador = null; c.estado = "pendiente"; }
+          });
+          cerrarModal(); guardar(`Equipo eliminado: ${e.nombre}`); render(); avisar("Equipo eliminado", "ok");
+        },
+      });
+      break;
+    }
+    case "borrarTodosEquipos":
+      confirmar({
+        titulo: "Vaciar listado de participantes", peligro: true, confirmar: "Vaciar todo",
+        mensaje: "Se eliminan todos los equipos y los combates generados. Esta acción no se puede deshacer.",
+        alConfirmar: () => {
+          E.equipos = []; E.combates = []; E.combateActual = null; E.contadorCombate = 0; E.torneo.generado = false;
+          guardar("Listado de participantes vaciado"); render();
+        },
+      });
+      break;
+    case "importar": abrirImportador(); break;
+    case "sorteo":
+      if (E.torneo.generado) {
+        confirmar({
+          titulo: "Rehacer el sorteo", peligro: true, confirmar: "Rehacer sorteo",
+          mensaje: "Se borran los combates y resultados actuales para armar la competencia de nuevo.",
+          alConfirmar: dialogoSorteo,
+        });
+      } else dialogoSorteo();
+      break;
+    case "eliminatoria": {
+      const pendientes = E.combates.filter((c) => c.fase === "grupos" && c.estado !== "finalizado").length;
+      confirmar({
+        titulo: "Generar eliminatoria",
+        mensaje: pendientes ? `Aún quedan <b>${pendientes} combates de grupos</b> sin finalizar. Si continúa, clasifico según la tabla actual.`
+          : `La fase de grupos está completa. Clasifican los <b>${E.torneo.grupos.clasifican} primeros</b> de cada grupo.`,
+        confirmar: "Generar", alConfirmar: generarEliminatoriaDesdeGrupos,
+      });
+      break;
+    }
+    case "activar": activar(id); break;
+    case "cambiarCombate": dialogoCambioCombate(); break;
+    case "ficha": fichaEquipo(id); break;
+    case "detalleCombate": detalleCombate(id); break;
+    case "observaciones": dialogoObservaciones(id); break;
+    case "ayuda": dialogoAyuda(); break;
+    case "reloj": accionReloj(t.dataset.modo); break;
+    case "ronda": accionRonda(t.dataset.lado); break;
+    case "descanso": {
+      avisar("Descanso de " + mmss(E.torneo.duracionDescanso) + " iniciado");
+      const fin = ahora() + E.torneo.duracionDescanso;
+      bot(`Descanso entre rondas: <b id="relojDescanso" data-fin="${fin}">${mmss(E.torneo.duracionDescanso)}</b>`, E.torneo.duracionDescanso + 1200);
+      break;
+    }
+    case "estado": {
+      const c = combate(E.combateActual); if (!c) break;
+      const e = t.dataset.e;
+      if (e !== "curso") detenerReloj(c);
+      c.estado = e;
+      c.historial.push({ ts: ahora(), texto: "Estado cambiado a " + ESTADOS[e] });
+      guardar(`Combate ${c.numero}: ${ESTADOS[e]}`); render();
+      break;
+    }
+    case "gana": {
+      const c = combate(E.combateActual); if (!c || !c.equipoA || !c.equipoB) break;
+      dialogoGanador(c, t.dataset.lado);
+      break;
+    }
+    case "reabrir": {
+      const c = combate(id); if (!c) break;
+      confirmar({
+        titulo: "Editar resultado", peligro: true, confirmar: "Reabrir combate",
+        mensaje: `El combate ${c.numero} quedó con <b>${h(nombreEquipo(c.ganador) || "sin ganador")}</b> como ganador.
+          Al reabrirlo se retira ese avance de la llave. El cambio queda registrado en el historial.`,
+        alConfirmar: () => { cerrarModal(); reabrirCombate(id); },
+      });
+      break;
+    }
+    case "guardarAjustes": {
+      E.torneo.nombre = $("#aNombre").value.trim() || E.torneo.nombre;
+      E.torneo.sede = $("#aSede").value.trim();
+      E.torneo.duracionCombate = leerDuracion($("#aDur").value, 180000);
+      E.torneo.duracionDescanso = leerDuracion($("#aDesc").value, 30000);
+      E.torneo.rondasPorCombate = Math.max(1, Math.min(3, parseInt($("#aRondas").value, 10) || 3));
+      const tema = $("#aTema").value;
+      if (tema === "auto") document.documentElement.removeAttribute("data-theme");
+      else document.documentElement.setAttribute("data-theme", tema);
+      try { localStorage.setItem("sumobot.tema", tema); } catch (e) { }
+      guardar("Ajustes de la competencia actualizados"); render(); avisar("Ajustes guardados", "ok");
+      break;
+    }
+    case "respaldoBajar": respaldoBajar(); break;
+    case "respaldoSubir": respaldoSubir(); break;
+    case "reiniciarTodo":
+      confirmar({
+        titulo: "Reiniciar la competencia", peligro: true, confirmar: "Reiniciar todo",
+        mensaje: "Se borran equipos, combates, resultados e historial. Descargue antes un respaldo si lo necesita.",
+        alConfirmar: () => { const m = E.marca; E = estadoInicial(); E.marca = m; guardar("Competencia reiniciada"); vista = "panel"; render(); },
+      });
+      break;
+  }
+});
+document.addEventListener("input", (ev) => {
+  if (ev.target.id === "buscaEquipo") {
+    filtroEquipos = ev.target.value;
+    const pos = ev.target.selectionStart;
+    render();
+    const n = $("#buscaEquipo"); if (n) { n.focus(); n.setSelectionRange(pos, pos); }
+  }
+});
+document.addEventListener("keydown", (ev) => {
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+  if ($("#modales").children.length) { if (ev.key === "Escape") cerrarModal(); return; }
+  if (vista !== "combate") return;
+  const c = combate(E.combateActual); if (!c) return;
+  const k = ev.key.toLowerCase();
+  if (ev.code === "Space") { ev.preventDefault(); if (c.estado !== "finalizado") accionReloj(relojCorriendo(c) ? "detener" : "iniciar"); }
+  else if (k === "r") { if (c.estado !== "finalizado") accionReloj("reiniciar"); }
+  else if (k === "a" && c.estado !== "finalizado" && c.equipoA && c.equipoB) dialogoGanador(c, "a");
+  else if (k === "b" && c.estado !== "finalizado" && c.equipoA && c.equipoB) dialogoGanador(c, "b");
+  else if (k === "c") dialogoCambioCombate();
+});
+window.addEventListener("beforeunload", () => { try { localStorage.setItem(CLAVE_LOCAL, JSON.stringify(E)); } catch (e) { } });
+
+/* ---------------------------------------------------------------- arranque */
+(function inicio() {
+  try { const t = localStorage.getItem("sumobot.tema"); if (t && t !== "auto") document.documentElement.setAttribute("data-theme", t); } catch (e) { }
+  const habia = cargarLocal();
+  render();
+  if (!habia) setTimeout(() => bot("<b>Bienvenido.</b> Soy TecnoBot y le acompaño durante toda la competencia. Empecemos registrando los equipos.", 7000), 700);
+  iniciarSincronia();
+})();
+</script>
+</body>
+</html>
